@@ -1,5 +1,11 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## AI chat configuration
+
+The chat API uses Google's Gemini API. Create a `.env.local` file from `.env.example` if you do not already have one, then set `GOOGLE_GENERATIVE_AI_API_KEY` to a key from [Google AI Studio](https://aistudio.google.com/apikey). Keep this key server-side and never commit it.
+
+The default model is `gemini-3.5-flash-lite`. Set `GEMINI_MODEL` in `.env.local` only if you want to use a different model available to your API key. Restart the development server after changing environment variables.
+
 ## Getting Started
 
 First, run the development server:

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <rect width="400" height="300" rx="24" fill="#fef3c7" />
+  <rect x="120" y="80" width="160" height="110" rx="8" fill="#1f2937" />
+  <rect x="130" y="90" width="140" height="85" rx="4" fill="#10b981" opacity="0.6" />
+  <rect x="160" y="190" width="80" height="8" rx="4" fill="#374151" />
+  <text x="200" y="270" text-anchor="middle" font-size="16" fill="#92400e" font-family="sans-serif">Hackathon Night</text>
+</svg>
