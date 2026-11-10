@@ -30,7 +30,7 @@ export default function Page() {
   const ActiveComponent = pageComponents[activePage];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-gray-100 transition-colors duration-300 relative">
+    <div className="min-h-screen bg-transparent text-zinc-900 dark:text-gray-100 transition-colors duration-300 relative">
       {/* Neural Glow Effect */}
       <NeuralGlow />
 

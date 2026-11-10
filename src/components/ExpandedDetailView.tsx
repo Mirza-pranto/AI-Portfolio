@@ -65,7 +65,21 @@ export default function ExpandedDetailView() {
   } else if (expandedItemType === 'project') {
     item = portfolioData.projects.find((p) => String(p.id) === String(expandedItemId));
   } else if (expandedItemType === 'fun') {
-    item = portfolioData.fun.items.find((f) => String(f.id) === String(expandedItemId));
+    const sections = (portfolioData.fun as any).sections || [];
+    const section = sections.find((s: any) => String(s.id) === String(expandedItemId));
+    if (section) {
+      item = {
+        title: section.title,
+        subtitle: section.subtitle,
+        emoji: section.emoji,
+        image: section.image || null,
+        gradient: section.gradient || 'from-amber-600 to-orange-600',
+        tags: section.tags || [],
+        description: section.description,
+        longDescription: section.description,
+        links: null,
+      };
+    }
   } else if (expandedItemType === 'education') {
     const edu = portfolioData.education.find((e) => String(e.id) === String(expandedItemId));
     if (edu) {

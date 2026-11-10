@@ -182,51 +182,33 @@ This project investigates the effectiveness of traditional ML models versus deep
   },
 
   fun: {
-    images: [
-      { id: "2", src: "/fun-2-placeholder.svg", alt: "UI/UX design workshop" },
-      { id: "3", src: "/fun-3-placeholder.svg", alt: "Hackathon night" },
-    ],
-    items: [
+    sections: [
       {
-        id: "2",
-        title: "Hackathons & Rapid Prototyping",
-        subtitle: "National AI Competitions & Mentorship",
-        emoji: "🚀",
-        gradient: "from-violet-600 to-purple-600",
-        description:
-          "Competing in high-intensity hackathons, turning 0-to-1 concepts into functional AI prototypes, and mentoring junior engineers.",
-        longDescription: `Hackathons are where I push the limits of speed and creativity. Building under intense 24-48 hour constraints has honed my ability to rapidly architect systems from initial idea to working prototype.
-
-Key Highlights:
-• Fast Execution: Developed end-to-end working prototypes integrating LLMs, vector search, and web interfaces within hackathon timeframes.
-• Mentorship & Coaching: Conducted workshops and mentored newer university students on API design, prompt engineering, and modern web frameworks.
-• Problem Solving: Focused on high-impact problem spaces including automated compliance, healthcare record summarization, and civic tech.`,
-        tags: ["Hackathons", "Rapid Prototyping", "Mentorship", "AI Engineering"],
-        links: {
-          github: "https://github.com/Mirza-pranto",
-        },
+        id: 'fun-1',
+        title: 'Iron & Motion',
+        subtitle: 'Fitness, Calisthenics & Boxing',
+        emoji: '🥊',
+        gradient: 'from-zinc-800 via-slate-900 to-zinc-950',
+        image: '/fun-fitness.jpg',
+        description: `More than a routine, the gym has been my sanctuary of transformation for over a year—sculpting not just an aesthetic physique, but the architecture of a disciplined life. Every lift, every drop of sweat, has rewritten my perspective and fortified my confidence. Today, this relentless pursuit expands into the raw control of calisthenics and the sharp focus of boxing—a constant dialogue between power and grace.`,
+        tags: ['Discipline', 'Calisthenics', 'Boxing', 'Strength Training'],
       },
       {
-        id: "3",
-        title: "Creative Tech & UI/UX Craft",
-        subtitle: "Design Systems & Human-AI Interactions",
-        emoji: "💻",
-        gradient: "from-amber-600 to-orange-600",
-        description:
-          "Bridging deep AI technical backends with delightful, intuitive human-AI interfaces and fluid animations.",
-        longDescription: `I believe the greatest AI breakthroughs are only as powerful as their user interfaces. I love tinkering at the intersection of generative AI, design systems, and fluid frontend interactions.
-
-Key Highlights:
-• Design Systems: Exploring modern UI architectures with Tailwind CSS, Framer Motion, and Figma design tokens.
-• Human-AI Interaction: Designing micro-feedback mechanisms (like neural streaming glows, typewriter cadences, and optimistic states) that make working with AI models intuitive and engaging.
-• Continuous Craft: Constantly experimenting with modern web standards, SVG animations, and responsive layouts.`,
-        tags: ["UI/UX", "Framer Motion", "Tailwind CSS", "Design Systems", "Product Design"],
-        links: {
-          github: "https://github.com/Mirza-pranto",
-        },
+        id: 'fun-2',
+        title: 'Canvas & Graphite',
+        subtitle: 'Acrylic Painting & Sketching',
+        emoji: '🎨',
+        gradient: 'from-amber-700 via-rose-700 to-violet-800',
+        image: '/fun-art.jpg',
+        gallery: ['/fun-art.jpg', '/fun-art-2.jpg'],
+        description: `In the quiet spaces between logic and imagination lies my art. With acrylics, I blend colors by hand to mirror the unspoken hues of my inner world. Alongside this, sketching remains my longest-standing childhood love—a sanctuary where graphite meets paper. With every stroke and sweeping line, the boundaries of my capabilities dissolve, letting me design a beautiful life one pencil mark at a time.`,
+        tags: ['Acrylic Painting', 'Pencil Sketching', 'Character Art', 'Creative Expression'],
       },
     ],
-    description: `Outside of building models, I am deeply involved in the tech and maker community! I love participating in fast-paced hackathons, designing human-centered AI interfaces, and mentoring younger developers. I constantly experiment with modern web standards, design systems, and creative technology.`,
+    // Keep legacy items for ExpandedDetailView compatibility
+    images: [],
+    items: [],
+    description: `Beyond the terminal, I seek mastery in movement and meaning—forging discipline through iron and motion, and finding beauty through canvas and graphite.`,
   },
 
   experience: [
