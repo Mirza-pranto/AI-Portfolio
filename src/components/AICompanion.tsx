@@ -385,18 +385,18 @@ function AICompanion() {
                 scale: isPageTransitioning
                   ? [1, 1.4, 1.1, 1.45, 1.15, 1.5, 1]
                   : isThinking
-                  ? [1, 1.22, 1]
-                  : [1, 1.08, 1],
+                  ? [1, 1.3, 1]
+                  : [1, 1.18, 1],
                 opacity: isPageTransitioning
                   ? [0.7, 1, 0.75, 1, 0.8, 1, 0.7]
                   : isThinking
-                  ? [0.85, 1, 0.85]
-                  : [0.65, 0.85, 0.65],
+                  ? [0.65, 1, 0.65]
+                  : [0.65, 0.92, 0.65],
               }}
               transition={{
                 rotate: { duration: isThinking ? 5 : 18, repeat: Infinity, ease: 'linear' },
-                scale: { duration: isPageTransitioning ? 1.4 : isThinking ? 0.7 : 3.4, repeat: isPageTransitioning ? 0 : Infinity, ease: 'easeInOut' },
-                opacity: { duration: isPageTransitioning ? 1.4 : isThinking ? 0.7 : 3.4, repeat: isPageTransitioning ? 0 : Infinity, ease: 'easeInOut' },
+                scale: { duration: isPageTransitioning ? 1.4 : isThinking ? 0.5 : 2.4, repeat: isPageTransitioning ? 0 : Infinity, ease: 'easeInOut' },
+                opacity: { duration: isPageTransitioning ? 1.4 : isThinking ? 0.5 : 2.4, repeat: isPageTransitioning ? 0 : Infinity, ease: 'easeInOut' },
               }}
             />
 
@@ -457,13 +457,12 @@ function AICompanion() {
                     top: `calc(50% + ${48 * Math.sin((angle * Math.PI) / 180)}% - 4px)`,
                   }}
                   animate={{
-                    opacity: [0.6, 1, 0.6],
-                    scale: [0.85, 1.25, 0.85],
+                    opacity: isPageTransitioning ? [0.6, 1, 0.6] : isThinking ? [0.6, 1, 0.6] : [0.6, 0.92, 0.6],
+                    scale: isPageTransitioning ? [0.85, 1.4, 0.85] : isThinking ? [0.85, 1.4, 0.85] : [0.85, 1.25, 0.85],
                   }}
                   transition={{
-                    duration: 2.2,
-                    repeat: Infinity,
-                    delay: i * 0.45,
+                    duration: isPageTransitioning ? 1.4 : isThinking ? 0.5 : 2.4,
+                    repeat: isPageTransitioning ? 0 : Infinity,
                     ease: 'easeInOut',
                   }}
                 />
@@ -512,67 +511,6 @@ function AICompanion() {
                   ease: 'easeInOut',
                 }}
               />
-
-              {/* ── Internal Circular Tech Aperture & Synaptic Filaments ── */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <svg viewBox="0 0 100 100" className="w-full h-full p-1.5" fill="none">
-                  {/* Concentric Cyber Reticle Rings */}
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="38"
-                    className="stroke-indigo-400/40 dark:stroke-cyan-400/40"
-                    strokeWidth="1"
-                    strokeDasharray="4 3"
-                  />
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="28"
-                    className="stroke-blue-500/50 dark:stroke-cyan-300/50"
-                    strokeWidth="1.2"
-                  />
-
-                  {/* Neural Synaptic Connections */}
-                  <path
-                    d="M 32 44 Q 50 36 68 44"
-                    className="stroke-blue-500 dark:stroke-cyan-300"
-                    strokeWidth="1.2"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M 32 58 Q 50 64 68 58"
-                    className="stroke-indigo-500 dark:stroke-cyan-300"
-                    strokeWidth="1.2"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M 50 28 L 50 72"
-                    className="stroke-cyan-500 dark:stroke-sky-200"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M 36 36 L 64 64"
-                    className="stroke-blue-400/70 dark:stroke-indigo-300/70"
-                    strokeWidth="1"
-                  />
-                  <path
-                    d="M 64 36 L 36 64"
-                    className="stroke-indigo-400/70 dark:stroke-cyan-400/70"
-                    strokeWidth="1"
-                  />
-
-                  {/* Synaptic Junction Nodes */}
-                  <circle cx="50" cy="50" r="3.4" className="fill-blue-600 dark:fill-cyan-100 shadow-md" />
-                  <circle cx="38" cy="40" r="2.2" className="fill-indigo-600 dark:fill-cyan-300" />
-                  <circle cx="62" cy="40" r="2.2" className="fill-blue-600 dark:fill-cyan-300" />
-                  <circle cx="38" cy="60" r="2.2" className="fill-indigo-700 dark:fill-cyan-300" />
-                  <circle cx="62" cy="60" r="2.2" className="fill-blue-700 dark:fill-cyan-300" />
-                  <circle cx="50" cy="32" r="1.8" className="fill-cyan-600 dark:fill-sky-200" />
-                  <circle cx="50" cy="68" r="1.8" className="fill-cyan-600 dark:fill-sky-200" />
-                </svg>
-              </div>
 
               {/* ── 3D Spherical Specular Dome Glare (Apple Glass Volume) ── */}
               <div
@@ -673,12 +611,20 @@ function AICompanion() {
                     top: `calc(50% + ${48 * Math.sin((angle * Math.PI) / 180)}% - 6px)`,
                   }}
                   animate={{
-                    scale: isThinking ? [0.85, 1.4, 0.85] : [0.95, 1.2, 0.95],
+                    scale: isPageTransitioning
+                      ? [0.85, 1.4, 0.85]
+                      : isThinking
+                      ? [0.85, 1.4, 0.85]
+                      : [0.85, 1.25, 0.85],
+                    opacity: isPageTransitioning
+                      ? [0.65, 1, 0.65]
+                      : isThinking
+                      ? [0.65, 1, 0.65]
+                      : [0.65, 0.92, 0.65],
                   }}
                   transition={{
-                    duration: isThinking ? 0.6 : 1.8,
-                    repeat: Infinity,
-                    delay: i * 0.35,
+                    duration: isPageTransitioning ? 1.4 : isThinking ? 0.5 : 2.4,
+                    repeat: isPageTransitioning ? 0 : Infinity,
                     ease: 'easeInOut',
                   }}
                 >
