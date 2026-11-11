@@ -186,12 +186,12 @@ function AICompanion() {
       prevPageRef.current = activePage;
       setIsPageTransitioning(true);
 
-      // Effort to load transition: shrink, gather energy, then pop back up
+      // Effort to load transition: shrink, vigorously shake/strain, then pop back up
       const timer = setTimeout(() => {
         setIsPageTransitioning(false);
         const greeting = PAGE_GREETINGS[activePage];
         if (greeting) showMessage(greeting);
-      }, 650);
+      }, 1400);
 
       return () => clearTimeout(timer);
     } else {
@@ -298,21 +298,23 @@ function AICompanion() {
           animate={
             isPageTransitioning
               ? {
-                  scale: [1, 0.74, 0.74, 1.14, 0.96, 1],
-                  y: [0, 8, 8, -10, 2, 0],
-                  rotate: [0, -7, 7, -3, 0],
+                  scale: [1, 0.68, 0.68, 0.68, 0.68, 0.68, 0.68, 0.68, 0.68, 1.2, 0.96, 1],
+                  x: [0, 0, -4, 4, -6, 6, -5, 5, -4, 4, 0, 0],
+                  rotate: [0, -3, 6, -7, 9, -9, 8, -7, 6, -4, 0, 0],
+                  y: [0, 6, 7, 8, 8, 8, 8, 7, 6, -14, 2, 0],
                 }
               : {
                   y: [0, -8, 0],
                   scale: 1,
+                  x: 0,
                   rotate: 0,
                 }
           }
           transition={
             isPageTransitioning
               ? {
-                  duration: 0.65,
-                  times: [0, 0.22, 0.44, 0.72, 0.88, 1],
+                  duration: 1.4,
+                  times: [0, 0.12, 0.22, 0.35, 0.48, 0.6, 0.72, 0.82, 0.88, 0.94, 0.98, 1],
                   ease: 'easeInOut',
                 }
               : {
@@ -347,20 +349,20 @@ function AICompanion() {
               animate={{
                 rotate: [0, 360],
                 scale: isPageTransitioning
-                  ? [1, 1.35, 1]
+                  ? [1, 1.4, 1.1, 1.45, 1.15, 1.5, 1]
                   : isThinking
                   ? [1, 1.22, 1]
                   : [1, 1.08, 1],
                 opacity: isPageTransitioning
-                  ? [0.7, 1, 0.7]
+                  ? [0.7, 1, 0.75, 1, 0.8, 1, 0.7]
                   : isThinking
                   ? [0.85, 1, 0.85]
                   : [0.65, 0.85, 0.65],
               }}
               transition={{
                 rotate: { duration: isThinking ? 5 : 18, repeat: Infinity, ease: 'linear' },
-                scale: { duration: isPageTransitioning ? 0.65 : isThinking ? 0.7 : 3.4, repeat: isPageTransitioning ? 0 : Infinity, ease: 'easeInOut' },
-                opacity: { duration: isPageTransitioning ? 0.65 : isThinking ? 0.7 : 3.4, repeat: isPageTransitioning ? 0 : Infinity, ease: 'easeInOut' },
+                scale: { duration: isPageTransitioning ? 1.4 : isThinking ? 0.7 : 3.4, repeat: isPageTransitioning ? 0 : Infinity, ease: 'easeInOut' },
+                opacity: { duration: isPageTransitioning ? 1.4 : isThinking ? 0.7 : 3.4, repeat: isPageTransitioning ? 0 : Infinity, ease: 'easeInOut' },
               }}
             />
 
@@ -460,18 +462,18 @@ function AICompanion() {
                 "
                 animate={{
                   scale: isPageTransitioning
-                    ? [1, 1.35, 0.92, 1]
+                    ? [1, 1.4, 0.88, 1.45, 0.9, 1.5, 0.92, 1.4, 1]
                     : isThinking
                     ? [0.95, 1.25, 0.95]
                     : [0.96, 1.08, 0.96],
                   opacity: isPageTransitioning
-                    ? [0.75, 1, 0.75]
+                    ? [0.75, 1, 0.75, 1, 0.8, 1, 0.85, 1, 0.75]
                     : isThinking
                     ? [0.85, 1, 0.85]
                     : [0.75, 0.92, 0.75],
                 }}
                 transition={{
-                  duration: isPageTransitioning ? 0.65 : isThinking ? 0.5 : 2.4,
+                  duration: isPageTransitioning ? 1.4 : isThinking ? 0.5 : 2.4,
                   repeat: isPageTransitioning ? 0 : Infinity,
                   ease: 'easeInOut',
                 }}
