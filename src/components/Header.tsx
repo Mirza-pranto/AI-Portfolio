@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Home, Sun, Moon } from 'lucide-react';
+import { Download, Home, Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { portfolioData } from '@/lib/data';
 import { usePortfolioStore } from '@/lib/store';
@@ -51,7 +51,7 @@ export default function Header() {
       </motion.button>
 
       {/* Right: Actions */}
-      <div className="flex items-center gap-2 justify-end w-20">
+      <div className="flex items-center gap-2 justify-end">
         {/* Home Button */}
         <motion.button
           whileHover={{ scale: 1.08 }}
@@ -67,6 +67,19 @@ export default function Header() {
         >
           <Home className="w-4 h-4" />
         </motion.button>
+
+        <motion.a
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.92 }}
+          href="/Mirza_Julkawsar_Resume.pdf"
+          download="Mirza_Julkawsar_Resume.pdf"
+          aria-label="Download CV"
+          title="Download CV"
+          className="flex h-9 items-center justify-center gap-1.5 rounded-full border border-gray-200/80 bg-white/70 px-3 text-sm font-medium text-zinc-700 shadow-sm backdrop-blur-md transition-colors hover:border-gray-300 dark:border-zinc-700/60 dark:bg-zinc-800/70 dark:text-zinc-200 dark:hover:border-zinc-600"
+        >
+          <Download className="h-4 w-4" />
+          <span>CV</span>
+        </motion.a>
 
         {/* Theme Toggle Button */}
         {mounted ? (
