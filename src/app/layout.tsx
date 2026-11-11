@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import ThemeProvider from "@/components/ThemeProvider";
 import LatentGraphBackground from "@/components/animations/LatentGraphBackground";
+import AICompanion from "@/components/AICompanion";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,6 +34,8 @@ export default function RootLayout({
           {/* Latent Space / Graph-RAG interactive background canvas */}
           <LatentGraphBackground />
           {children}
+          {/* AI Companion — floats globally over all pages */}
+          <AICompanion />
         </ThemeProvider>
       </body>
     </html>

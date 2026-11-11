@@ -28,6 +28,9 @@ interface PortfolioState {
   expandedItemId: string | null;
   setExpandedItem: (type: 'project' | 'fun' | 'education' | 'experience' | 'skill', id: string | number) => void;
   clearExpandedItem: () => void;
+  // AI Companion state
+  companionMessage: string | null;
+  setCompanionMessage: (message: string | null) => void;
 }
 
 export const usePortfolioStore = create<PortfolioState>((set) => ({
@@ -65,4 +68,7 @@ export const usePortfolioStore = create<PortfolioState>((set) => ({
       expandedItemType: null,
       expandedItemId: null,
     }),
+  // AI Companion
+  companionMessage: null,
+  setCompanionMessage: (message) => set({ companionMessage: message }),
 }));

@@ -154,7 +154,7 @@ This project investigates the effectiveness of traditional ML models versus deep
       tags: ['TF-IDF', 'Word2Vec', 'GRU', 'LSTM', 'Scikit-Learn', 'Keras'],
       gradient: 'from-teal-600 to-emerald-600',
       image: '',
-      links: {},
+      links: { github: 'https://github.com/Mirza-pranto/NLP-Text-Classification-ML-vs-DL' },
     },
   ],
 
