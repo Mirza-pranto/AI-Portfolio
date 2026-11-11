@@ -180,10 +180,10 @@ export default function ChatInput() {
           whileTap={{ scale: 0.92 }}
           type="submit"
           disabled={isLoading || !input.trim()}
-          className="absolute right-2 flex items-center justify-center w-8 h-8 rounded-xl bg-blue-500 text-white hover:bg-blue-600 dark:bg-white dark:text-black dark:hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors shadow-sm cursor-pointer"
+          className="absolute right-2 flex items-center justify-center w-8 h-8 rounded-xl bg-violet-600 text-white hover:bg-violet-700 dark:bg-violet-500 dark:text-white dark:hover:bg-violet-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors shadow-sm cursor-pointer"
         >
           {isLoading ? (
-            <Loader2 className="w-4 h-4 animate-spin text-white dark:text-black" />
+            <Loader2 className="w-4 h-4 animate-spin text-white" />
           ) : (
             <ArrowUp className="w-4 h-4" />
           )}
