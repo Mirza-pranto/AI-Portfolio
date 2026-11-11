@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import ThemeProvider from "@/components/ThemeProvider";
 import AICompanion from "@/components/AICompanion";
+import HomeGuideOrb from "@/components/HomeGuideOrb";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,6 +34,8 @@ export default function RootLayout({
           {children}
           {/* AI Companion — floats globally over all pages */}
           <AICompanion />
+          {/* Home Guide Aura Spark — guides new users from companion to quick questions */}
+          <HomeGuideOrb />
         </ThemeProvider>
       </body>
     </html>

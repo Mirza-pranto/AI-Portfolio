@@ -99,6 +99,8 @@ function AICompanion() {
   const [isThinking, setIsThinking] = useState(false);
   const [isPageTransitioning, setIsPageTransitioning] = useState(false);
   const [spinTrigger, setSpinTrigger] = useState(0);
+  const clickCountRef = useRef(0);
+  const clickResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const prevExpandedRef = useRef<string | null>(null);
@@ -113,6 +115,39 @@ function AICompanion() {
     },
     [setCompanionMessage]
   );
+
+  /* ── Click reaction handler with escalating dizzy dialogue ── */
+  const handleAvatarClick = useCallback(() => {
+    setSpinTrigger((s) => s + 1);
+    clickCountRef.current += 1;
+
+    // Reset rapid-click counter after 6 seconds of calm
+    if (clickResetTimerRef.current) clearTimeout(clickResetTimerRef.current);
+    clickResetTimerRef.current = setTimeout(() => {
+      clickCountRef.current = 0;
+    }, 6000);
+
+    const count = clickCountRef.current;
+    if (count === 1) {
+      showMessage("Oh, hoo.... ho... that was a smooth spin! 🌀✨", 4000);
+    } else if (count === 2) {
+      showMessage("Whoa, again?! You really like that 360 spin, don't you? 💫", 4500);
+    } else if (count === 3) {
+      showMessage("Hold on... my gyro sensors are getting a little dizzy! 😵‍💫", 5000);
+    } else if (count === 4) {
+      showMessage("Hey! Stop spinning me! My neural weights might get tangled! 🧠⚡", 5500);
+    } else if (count === 5) {
+      showMessage("Warning: Centrifugal overflow! My code is literally gonna mix up! 📜💥", 6000);
+    } else {
+      const dizzyQuips = [
+        "100101... wait, did a semicolon just fly out of my stack?! 🌀😵",
+        "Error 418: Companion is currently dizzy. Please let me catch my balance! 💫",
+        "If my RAG pipeline starts hallucinating cat pictures, it's totally your fault! 🐱⚠️",
+        "Look at me goooooo! But seriously, I'm feeling nauseous in binary! 0_0",
+      ];
+      showMessage(dizzyQuips[(count - 6) % dizzyQuips.length], 6000);
+    }
+  }, [showMessage]);
 
   /* ── Fetch AI-generated project reaction ── */
   const fetchProjectReaction = useCallback(
@@ -164,12 +199,14 @@ function AICompanion() {
     if (expandedItemType === 'project' && expandedItemId) {
       setSpinTrigger((s) => s + 1);
       fetchProjectReaction(expandedItemId);
+    } else if (expandedItemType === 'skill') {
+      setSpinTrigger((s) => s + 1);
+      const skillName = expandedItemId;
+      showMessage(skillName ? `Checking out projects powered by ${skillName}? Let's see the stack! ⚡` : getRandomFrom(SKILL_MESSAGES));
     } else if (expandedItemType === 'education') {
       showMessage(getRandomFrom(EDUCATION_MESSAGES));
     } else if (expandedItemType === 'experience') {
       showMessage(getRandomFrom(EXPERIENCE_MESSAGES));
-    } else if (expandedItemType === 'skill') {
-      showMessage(getRandomFrom(SKILL_MESSAGES));
     } else if (expandedItemType === 'fun') {
       showMessage(getRandomFrom(FUN_MESSAGES));
     } else if (expandedItemType === null) {
@@ -238,6 +275,7 @@ function AICompanion() {
   useEffect(() => {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
+      if (clickResetTimerRef.current) clearTimeout(clickResetTimerRef.current);
       if (abortRef.current) abortRef.current.abort();
     };
   }, []);
@@ -323,11 +361,7 @@ function AICompanion() {
           }
           whileHover={{ scale: 1.1, y: -4 }}
           whileTap={{ scale: 0.92 }}
-          onClick={() => {
-            setSpinTrigger((s) => s + 1);
-            const greeting = PAGE_GREETINGS[activePage];
-            if (greeting) showMessage(greeting);
-          }}
+          onClick={handleAvatarClick}
           className="cursor-pointer relative"
           title="Click to interact!"
         >
