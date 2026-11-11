@@ -97,10 +97,12 @@ function AICompanion() {
   } = usePortfolioStore();
 
   const [isThinking, setIsThinking] = useState(false);
+  const [isPageTransitioning, setIsPageTransitioning] = useState(false);
   const [spinTrigger, setSpinTrigger] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const prevExpandedRef = useRef<string | null>(null);
+  const prevPageRef = useRef<string>(activePage);
 
   /* ── Auto-dismiss helper ── */
   const showMessage = useCallback(
@@ -178,10 +180,24 @@ function AICompanion() {
     }
   }, [expandedItemType, expandedItemId, fetchProjectReaction, showMessage, setCompanionMessage]);
 
-  /* ── React to page navigation ── */
+  /* ── React to page navigation (Quick Questions / Tab Switching) ── */
   useEffect(() => {
-    const greeting = PAGE_GREETINGS[activePage];
-    if (greeting) showMessage(greeting);
+    if (prevPageRef.current !== activePage) {
+      prevPageRef.current = activePage;
+      setIsPageTransitioning(true);
+
+      // Effort to load transition: shrink, gather energy, then pop back up
+      const timer = setTimeout(() => {
+        setIsPageTransitioning(false);
+        const greeting = PAGE_GREETINGS[activePage];
+        if (greeting) showMessage(greeting);
+      }, 650);
+
+      return () => clearTimeout(timer);
+    } else {
+      const greeting = PAGE_GREETINGS[activePage];
+      if (greeting) showMessage(greeting);
+    }
   }, [activePage, showMessage]);
 
   /* ── Scroll velocity → lively jump animation when scrolling down ── */
@@ -196,23 +212,23 @@ function AICompanion() {
       // Trigger upward jump when scrolling down with moderate speed
       if (latestVelocity > 250 && !isJumpingRef.current) {
         isJumpingRef.current = true;
-        rawJumpY.set(-36);
+        rawJumpY.set(-26);
         setTimeout(() => {
           rawJumpY.set(0);
           setTimeout(() => {
             isJumpingRef.current = false;
-          }, 320);
-        }, 160);
+          }, 300);
+        }, 150);
       } else if (latestVelocity < -400 && !isJumpingRef.current) {
         // Subtle dip when scrolling up fast
         isJumpingRef.current = true;
-        rawJumpY.set(16);
+        rawJumpY.set(12);
         setTimeout(() => {
           rawJumpY.set(0);
           setTimeout(() => {
             isJumpingRef.current = false;
-          }, 260);
-        }, 140);
+          }, 240);
+        }, 130);
       }
     });
     return unsubscribe;
@@ -229,18 +245,18 @@ function AICompanion() {
   const showBubble = companionMessage !== null || isThinking;
 
   return (
-    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end gap-3 pointer-events-none">
+    <div className="fixed bottom-4 right-4 sm:bottom-5 sm:right-5 z-50 flex flex-col items-end gap-2.5 pointer-events-none">
 
-      {/* ══════════════ Speech Bubble (High-contrast glassmorphism) ══════════════ */}
+      {/* ══════════════ Speech Bubble (Compact, high-contrast glassmorphism) ══════════════ */}
       <AnimatePresence mode="wait">
         {showBubble && (
           <motion.div
             key={isThinking ? 'thinking' : companionMessage}
-            initial={{ opacity: 0, y: 14, scale: 0.88 }}
+            initial={{ opacity: 0, y: 12, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.92 }}
+            exit={{ opacity: 0, y: 6, scale: 0.92 }}
             transition={{ type: 'spring', stiffness: 420, damping: 26 }}
-            className="relative max-w-[260px] pointer-events-auto mr-3"
+            className="relative max-w-[210px] sm:max-w-[230px] pointer-events-auto mr-2"
           >
             {/* Glassmorphic bubble body with crisp light mode border and contrast */}
             <div className="
@@ -249,24 +265,24 @@ function AICompanion() {
               bg-white/95 dark:bg-zinc-900/90
               border-2 border-slate-300/90 dark:border-cyan-500/30
               rounded-2xl rounded-br-sm
-              shadow-2xl shadow-slate-900/20 dark:shadow-cyan-950/40
-              px-4 py-3
+              shadow-xl shadow-slate-900/15 dark:shadow-cyan-950/40
+              px-3.5 py-2.5
             ">
               {/* Subtle inner ambient tint */}
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-transparent to-blue-50/30 dark:from-cyan-950/30 dark:via-transparent dark:to-indigo-950/20 pointer-events-none" />
 
-              <div className="relative z-10 text-[13px] leading-[1.65] font-semibold text-slate-800 dark:text-zinc-100">
+              <div className="relative z-10 text-xs sm:text-[13px] leading-[1.6] font-semibold text-slate-800 dark:text-zinc-100">
                 {isThinking ? <ThinkingDots /> : companionMessage}
               </div>
             </div>
 
             {/* Pointer tail with matching border */}
             <div className="
-              absolute -bottom-[8px] right-6
+              absolute -bottom-[7px] right-5
               w-0 h-0
-              border-l-[8px] border-l-transparent
-              border-r-[8px] border-r-transparent
-              border-t-[9px] border-t-white/95 dark:border-t-zinc-900/90
+              border-l-[7px] border-l-transparent
+              border-r-[7px] border-r-transparent
+              border-t-[8px] border-t-white/95 dark:border-t-zinc-900/90
             " />
           </motion.div>
         )}
@@ -277,15 +293,33 @@ function AICompanion() {
         style={{ y: smoothJumpY }}
         className="pointer-events-auto select-none"
       >
-        {/* ══════════════ Idle Float & Hover Scale Wrapper ══════════════ */}
+        {/* ══════════════ Idle Float, Hover Scale, & Page Transition Effort Wrapper ══════════════ */}
         <motion.div
-          animate={{ y: [0, -10, 0] }}
-          transition={{
-            duration: 3.6,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-          whileHover={{ scale: 1.12, y: -6 }}
+          animate={
+            isPageTransitioning
+              ? {
+                  scale: [1, 0.74, 0.74, 1.14, 0.96, 1],
+                  y: [0, 8, 8, -10, 2, 0],
+                  rotate: [0, -7, 7, -3, 0],
+                }
+              : {
+                  y: [0, -8, 0],
+                  scale: 1,
+                  rotate: 0,
+                }
+          }
+          transition={
+            isPageTransitioning
+              ? {
+                  duration: 0.65,
+                  times: [0, 0.22, 0.44, 0.72, 0.88, 1],
+                  ease: 'easeInOut',
+                }
+              : {
+                  y: { duration: 3.4, repeat: Infinity, ease: 'easeInOut' },
+                }
+          }
+          whileHover={{ scale: 1.1, y: -4 }}
           whileTap={{ scale: 0.92 }}
           onClick={() => {
             setSpinTrigger((s) => s + 1);
@@ -295,36 +329,44 @@ function AICompanion() {
           className="cursor-pointer relative"
           title="Click to interact!"
         >
-          {/* ══════════════ Futuristic 3D Circular Cyber-Sphere + Fluid Aura ══════════════ */}
+          {/* ══════════════ Compact 3D Circular Cyber-Sphere + Fluid Aura ══════════════ */}
           <motion.div
-            className="relative w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center"
+            className="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center"
             animate={{ rotate: spinTrigger * 360 }}
             transition={{ type: 'spring', stiffness: 50, damping: 10, mass: 1.2 }}
           >
 
             {/* ── Layer 1: Ambient Luminous Aura (Soft circulating background fluid vortex) ── */}
             <motion.div
-              className="absolute inset-[-16px] sm:inset-[-20px] rounded-full pointer-events-none"
+              className="absolute inset-[-12px] sm:inset-[-15px] rounded-full pointer-events-none"
               style={{
                 background:
-                  'radial-gradient(circle, rgba(37,99,235,0.32) 0%, rgba(56,189,248,0.2) 42%, rgba(99,102,241,0.12) 65%, transparent 85%)',
-                filter: 'blur(22px)',
+                  'radial-gradient(circle, rgba(37,99,235,0.3) 0%, rgba(56,189,248,0.18) 42%, rgba(99,102,241,0.1) 65%, transparent 85%)',
+                filter: 'blur(18px)',
               }}
               animate={{
                 rotate: [0, 360],
-                scale: isThinking ? [1, 1.25, 1] : [1, 1.1, 1],
-                opacity: isThinking ? [0.85, 1, 0.85] : [0.65, 0.88, 0.65],
+                scale: isPageTransitioning
+                  ? [1, 1.35, 1]
+                  : isThinking
+                  ? [1, 1.22, 1]
+                  : [1, 1.08, 1],
+                opacity: isPageTransitioning
+                  ? [0.7, 1, 0.7]
+                  : isThinking
+                  ? [0.85, 1, 0.85]
+                  : [0.65, 0.85, 0.65],
               }}
               transition={{
                 rotate: { duration: isThinking ? 5 : 18, repeat: Infinity, ease: 'linear' },
-                scale: { duration: isThinking ? 0.7 : 3.4, repeat: Infinity, ease: 'easeInOut' },
-                opacity: { duration: isThinking ? 0.7 : 3.4, repeat: Infinity, ease: 'easeInOut' },
+                scale: { duration: isPageTransitioning ? 0.65 : isThinking ? 0.7 : 3.4, repeat: isPageTransitioning ? 0 : Infinity, ease: 'easeInOut' },
+                opacity: { duration: isPageTransitioning ? 0.65 : isThinking ? 0.7 : 3.4, repeat: isPageTransitioning ? 0 : Infinity, ease: 'easeInOut' },
               }}
             />
 
             {/* ── Layer 2: Secondary Counter-Flowing Fluid Ribbon (Background Depth Stream) ── */}
             <motion.div
-              className="absolute inset-[-14px] sm:inset-[-18px] pointer-events-none z-0"
+              className="absolute inset-[-10px] sm:inset-[-13px] pointer-events-none z-0"
               animate={{
                 rotate: isThinking ? [360, 0] : [360, 0],
               }}
@@ -356,9 +398,9 @@ function AICompanion() {
                   d="M 134 90 C 134 122, 106 142, 60 140 C 20 138, 10 102, 22 66 C 34 30, 68 14, 108 22 C 132 30, 136 56, 124 76"
                   className="
                     stroke-[url(#counterFluidLight)] dark:stroke-[url(#counterFluidDark)]
-                    stroke-[4]
-                    drop-shadow-[0_0_10px_rgba(67,56,202,0.35)]
-                    dark:drop-shadow-[0_0_14px_rgba(129,140,248,0.6)]
+                    stroke-[3.5]
+                    drop-shadow-[0_0_8px_rgba(67,56,202,0.35)]
+                    dark:drop-shadow-[0_0_12px_rgba(129,140,248,0.6)]
                   "
                   strokeLinecap="round"
                 />
@@ -369,14 +411,14 @@ function AICompanion() {
                 <motion.div
                   key={i}
                   className="
-                    absolute w-2.5 h-2.5 rounded-full
+                    absolute w-2 h-2 rounded-full
                     bg-indigo-600 dark:bg-indigo-300
-                    shadow-[0_0_8px_2px_#4338ca]
-                    dark:shadow-[0_0_10px_2px_#818cf8]
+                    shadow-[0_0_6px_1.5px_#4338ca]
+                    dark:shadow-[0_0_8px_2px_#818cf8]
                   "
                   style={{
-                    left: `calc(50% + ${48 * Math.cos((angle * Math.PI) / 180)}% - 5px)`,
-                    top: `calc(50% + ${48 * Math.sin((angle * Math.PI) / 180)}% - 5px)`,
+                    left: `calc(50% + ${48 * Math.cos((angle * Math.PI) / 180)}% - 4px)`,
+                    top: `calc(50% + ${48 * Math.sin((angle * Math.PI) / 180)}% - 4px)`,
                   }}
                   animate={{
                     opacity: [0.6, 1, 0.6],
@@ -392,44 +434,52 @@ function AICompanion() {
               ))}
             </motion.div>
 
-            {/* ── Layer 3: The 3D Glass Sphere (Circular, Tactile, High-End Luxury) ── */}
+            {/* ── Layer 3: The 3D Glass Sphere (Circular, Tactile, Scaled-Down) ── */}
             <div className="
               relative z-10
-              w-24 h-24 sm:w-28 sm:h-28
+              w-[70px] h-[70px] sm:w-[80px] sm:h-[80px]
               rounded-full
               flex items-center justify-center
               overflow-hidden
               border-2 border-slate-900/85 dark:border-cyan-400/85
               bg-gradient-to-b from-slate-900/[0.12] via-blue-950/[0.22] to-slate-950/[0.42]
               dark:bg-gradient-to-b dark:from-slate-900/70 dark:via-blue-950/80 dark:to-cyan-950/90
-              shadow-[0_16px_36px_rgba(15,23,42,0.38),inset_0_-10px_22px_rgba(15,23,42,0.45),inset_0_4px_14px_rgba(255,255,255,0.7)]
-              dark:shadow-[0_0_32px_rgba(34,211,238,0.5),inset_0_-10px_24px_rgba(0,0,0,0.7),inset_0_4px_14px_rgba(34,211,238,0.6)]
+              shadow-[0_12px_28px_rgba(15,23,42,0.35),inset_0_-8px_18px_rgba(15,23,42,0.45),inset_0_3px_10px_rgba(255,255,255,0.7)]
+              dark:shadow-[0_0_26px_rgba(34,211,238,0.5),inset_0_-8px_20px_rgba(0,0,0,0.7),inset_0_3px_10px_rgba(34,211,238,0.6)]
               backdrop-blur-xl
             ">
 
               {/* ── Internal Plasma Nucleus (Energy Core) ── */}
               <motion.div
                 className="
-                  absolute w-12 h-12 sm:w-14 sm:h-14 rounded-full
+                  absolute w-9 h-9 sm:w-11 sm:h-11 rounded-full
                   bg-gradient-to-tr from-blue-700 via-indigo-600 to-cyan-400
                   dark:from-cyan-400 dark:via-sky-400 dark:to-indigo-500
-                  shadow-[0_0_24px_rgba(37,99,235,0.85)]
-                  dark:shadow-[0_0_32px_rgba(34,211,238,0.9)]
+                  shadow-[0_0_20px_rgba(37,99,235,0.85)]
+                  dark:shadow-[0_0_26px_rgba(34,211,238,0.9)]
                 "
                 animate={{
-                  scale: isThinking ? [0.95, 1.28, 0.95] : [0.96, 1.08, 0.96],
-                  opacity: isThinking ? [0.85, 1, 0.85] : [0.75, 0.92, 0.75],
+                  scale: isPageTransitioning
+                    ? [1, 1.35, 0.92, 1]
+                    : isThinking
+                    ? [0.95, 1.25, 0.95]
+                    : [0.96, 1.08, 0.96],
+                  opacity: isPageTransitioning
+                    ? [0.75, 1, 0.75]
+                    : isThinking
+                    ? [0.85, 1, 0.85]
+                    : [0.75, 0.92, 0.75],
                 }}
                 transition={{
-                  duration: isThinking ? 0.5 : 2.4,
-                  repeat: Infinity,
+                  duration: isPageTransitioning ? 0.65 : isThinking ? 0.5 : 2.4,
+                  repeat: isPageTransitioning ? 0 : Infinity,
                   ease: 'easeInOut',
                 }}
               />
 
               {/* ── Internal Circular Tech Aperture & Synaptic Filaments ── */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <svg viewBox="0 0 100 100" className="w-full h-full p-2" fill="none">
+                <svg viewBox="0 0 100 100" className="w-full h-full p-1.5" fill="none">
                   {/* Concentric Cyber Reticle Rings */}
                   <circle
                     cx="50"
@@ -478,21 +528,21 @@ function AICompanion() {
                   />
 
                   {/* Synaptic Junction Nodes */}
-                  <circle cx="50" cy="50" r="3.6" className="fill-blue-600 dark:fill-cyan-100 shadow-md" />
-                  <circle cx="38" cy="40" r="2.4" className="fill-indigo-600 dark:fill-cyan-300" />
-                  <circle cx="62" cy="40" r="2.4" className="fill-blue-600 dark:fill-cyan-300" />
-                  <circle cx="38" cy="60" r="2.4" className="fill-indigo-700 dark:fill-cyan-300" />
-                  <circle cx="62" cy="60" r="2.4" className="fill-blue-700 dark:fill-cyan-300" />
-                  <circle cx="50" cy="32" r="2" className="fill-cyan-600 dark:fill-sky-200" />
-                  <circle cx="50" cy="68" r="2" className="fill-cyan-600 dark:fill-sky-200" />
+                  <circle cx="50" cy="50" r="3.4" className="fill-blue-600 dark:fill-cyan-100 shadow-md" />
+                  <circle cx="38" cy="40" r="2.2" className="fill-indigo-600 dark:fill-cyan-300" />
+                  <circle cx="62" cy="40" r="2.2" className="fill-blue-600 dark:fill-cyan-300" />
+                  <circle cx="38" cy="60" r="2.2" className="fill-indigo-700 dark:fill-cyan-300" />
+                  <circle cx="62" cy="60" r="2.2" className="fill-blue-700 dark:fill-cyan-300" />
+                  <circle cx="50" cy="32" r="1.8" className="fill-cyan-600 dark:fill-sky-200" />
+                  <circle cx="50" cy="68" r="1.8" className="fill-cyan-600 dark:fill-sky-200" />
                 </svg>
               </div>
 
               {/* ── 3D Spherical Specular Dome Glare (Apple Glass Volume) ── */}
               <div
                 className="
-                  absolute top-1 left-2 sm:top-2 sm:left-3
-                  w-[62%] h-[40%]
+                  absolute top-1 left-1.5 sm:top-1.5 sm:left-2
+                  w-[60%] h-[38%]
                   rounded-full
                   bg-gradient-to-b from-white/80 via-white/20 to-transparent
                   blur-[0.5px]
@@ -503,18 +553,18 @@ function AICompanion() {
 
               {/* ── Subtle Bottom-Right Ambient Bounce Glow ── */}
               <div className="
-                absolute bottom-1 right-2
-                w-[50%] h-[26%]
+                absolute bottom-1 right-1.5
+                w-[48%] h-[24%]
                 rounded-full
                 bg-cyan-400/30 dark:bg-cyan-300/40
-                blur-[5px]
+                blur-[4px]
                 pointer-events-none
               " />
             </div>
 
             {/* ── Layer 4: Primary Liquid Ribbon Stream (Foreground Circulating Flow with Droplets) ── */}
             <motion.div
-              className="absolute inset-[-18px] sm:inset-[-22px] pointer-events-none z-20"
+              className="absolute inset-[-13px] sm:inset-[-16px] pointer-events-none z-20"
               animate={{
                 rotate: isThinking ? [0, 360] : [0, 360],
               }}
@@ -555,9 +605,9 @@ function AICompanion() {
                   d="M 32 100 C 32 50, 68 24, 120 28 C 170 32, 180 75, 166 120 C 150 165, 96 178, 56 158 C 34 144, 28 120, 38 100 Z"
                   className="
                     stroke-[url(#fluidStreamLight)] dark:stroke-[url(#fluidStreamDark)]
-                    stroke-[5.5]
-                    drop-shadow-[0_0_12px_rgba(37,99,235,0.45)]
-                    dark:drop-shadow-[0_0_18px_rgba(34,211,238,0.75)]
+                    stroke-[5]
+                    drop-shadow-[0_0_10px_rgba(37,99,235,0.45)]
+                    dark:drop-shadow-[0_0_16px_rgba(34,211,238,0.75)]
                   "
                   strokeLinecap="round"
                 />
@@ -566,7 +616,7 @@ function AICompanion() {
                 <path
                   d="M 42 100 C 42 60, 74 38, 118 40 C 158 42, 168 80, 154 116 C 140 152, 95 162, 64 148"
                   stroke="url(#fluidSpineGleam)"
-                  strokeWidth="1.8"
+                  strokeWidth="1.6"
                   strokeLinecap="round"
                 />
               </svg>
@@ -576,18 +626,18 @@ function AICompanion() {
                 <motion.div
                   key={i}
                   className="
-                    absolute w-3.5 h-3.5 rounded-full
+                    absolute w-3 h-3 rounded-full
                     bg-gradient-to-tr from-blue-700 via-cyan-400 to-white
                     dark:from-cyan-300 dark:via-sky-200 dark:to-white
-                    shadow-[0_0_12px_3px_#2563eb]
-                    dark:shadow-[0_0_16px_4px_#22d3ee]
+                    shadow-[0_0_10px_2.5px_#2563eb]
+                    dark:shadow-[0_0_14px_3.5px_#22d3ee]
                   "
                   style={{
-                    left: `calc(50% + ${48 * Math.cos((angle * Math.PI) / 180)}% - 7px)`,
-                    top: `calc(50% + ${48 * Math.sin((angle * Math.PI) / 180)}% - 7px)`,
+                    left: `calc(50% + ${48 * Math.cos((angle * Math.PI) / 180)}% - 6px)`,
+                    top: `calc(50% + ${48 * Math.sin((angle * Math.PI) / 180)}% - 6px)`,
                   }}
                   animate={{
-                    scale: isThinking ? [0.85, 1.45, 0.85] : [0.95, 1.25, 0.95],
+                    scale: isThinking ? [0.85, 1.4, 0.85] : [0.95, 1.2, 0.95],
                   }}
                   transition={{
                     duration: isThinking ? 0.6 : 1.8,
