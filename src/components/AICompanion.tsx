@@ -69,10 +69,10 @@ function ThinkingDots() {
       {[0, 1, 2].map((i) => (
         <motion.div
           key={i}
-          className="w-1.5 h-1.5 rounded-full bg-cyan-500 dark:bg-cyan-400"
+          className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-cyan-400"
           animate={{ y: [0, -5, 0], opacity: [0.4, 1, 0.4] }}
           transition={{
-            duration: 0.7,
+            duration: 0.6,
             repeat: Infinity,
             delay: i * 0.15,
             ease: 'easeInOut',
@@ -184,28 +184,39 @@ function AICompanion() {
     if (greeting) showMessage(greeting);
   }, [activePage, showMessage]);
 
-  /* ── Scroll velocity → jump animation ── */
+  /* ── Scroll velocity → lively jump animation when scrolling down ── */
   const { scrollY } = useScroll();
   const scrollVelocity = useVelocity(scrollY);
-  const rawJump = useMotionValue(0);
-  const smoothJump = useSpring(rawJump, { stiffness: 400, damping: 20 });
-  const jumpDebounce = useRef(false);
+  const rawJumpY = useMotionValue(0);
+  const smoothJumpY = useSpring(rawJumpY, { stiffness: 320, damping: 16, mass: 0.8 });
+  const isJumpingRef = useRef(false);
 
   useEffect(() => {
-    const unsubscribe = scrollVelocity.on('change', (v) => {
-      if (Math.abs(v) > 1500 && !jumpDebounce.current) {
-        jumpDebounce.current = true;
-        rawJump.set(v > 0 ? -30 : 30);
+    const unsubscribe = scrollVelocity.on('change', (latestVelocity) => {
+      // Trigger upward jump when scrolling down with moderate speed
+      if (latestVelocity > 250 && !isJumpingRef.current) {
+        isJumpingRef.current = true;
+        rawJumpY.set(-36);
         setTimeout(() => {
-          rawJump.set(0);
+          rawJumpY.set(0);
           setTimeout(() => {
-            jumpDebounce.current = false;
-          }, 400);
-        }, 150);
+            isJumpingRef.current = false;
+          }, 320);
+        }, 160);
+      } else if (latestVelocity < -400 && !isJumpingRef.current) {
+        // Subtle dip when scrolling up fast
+        isJumpingRef.current = true;
+        rawJumpY.set(16);
+        setTimeout(() => {
+          rawJumpY.set(0);
+          setTimeout(() => {
+            isJumpingRef.current = false;
+          }, 260);
+        }, 140);
       }
     });
     return unsubscribe;
-  }, [scrollVelocity, rawJump]);
+  }, [scrollVelocity, rawJumpY]);
 
   /* ── Cleanup ── */
   useEffect(() => {
@@ -220,7 +231,7 @@ function AICompanion() {
   return (
     <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end gap-3 pointer-events-none">
 
-      {/* ══════════════ Speech Bubble ══════════════ */}
+      {/* ══════════════ Speech Bubble (High-contrast glassmorphism) ══════════════ */}
       <AnimatePresence mode="wait">
         {showBubble && (
           <motion.div
@@ -228,241 +239,370 @@ function AICompanion() {
             initial={{ opacity: 0, y: 14, scale: 0.88 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.92 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-            className="relative max-w-[250px] pointer-events-auto mr-2"
+            transition={{ type: 'spring', stiffness: 420, damping: 26 }}
+            className="relative max-w-[260px] pointer-events-auto mr-3"
           >
-            {/* Glassmorphic bubble */}
+            {/* Glassmorphic bubble body with crisp light mode border and contrast */}
             <div className="
               relative overflow-hidden
-              backdrop-blur-lg
-              bg-white/60 dark:bg-zinc-900/60
-              border border-white/50 dark:border-zinc-600/40
-              rounded-2xl rounded-br-md
-              shadow-2xl shadow-cyan-300/10 dark:shadow-cyan-800/20
+              backdrop-blur-xl
+              bg-white/95 dark:bg-zinc-900/90
+              border-2 border-slate-300/90 dark:border-cyan-500/30
+              rounded-2xl rounded-br-sm
+              shadow-2xl shadow-slate-900/20 dark:shadow-cyan-950/40
               px-4 py-3
             ">
-              {/* Inner shimmer */}
-              <div className="absolute inset-0 bg-gradient-to-br from-cyan-50/30 via-transparent to-blue-50/20 dark:from-cyan-950/15 dark:via-transparent dark:to-blue-950/15 pointer-events-none" />
+              {/* Subtle inner ambient tint */}
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-transparent to-blue-50/30 dark:from-cyan-950/30 dark:via-transparent dark:to-indigo-950/20 pointer-events-none" />
 
-              <div className="relative z-10 text-[13px] leading-[1.65] text-zinc-700 dark:text-zinc-200 font-medium">
+              <div className="relative z-10 text-[13px] leading-[1.65] font-semibold text-slate-800 dark:text-zinc-100">
                 {isThinking ? <ThinkingDots /> : companionMessage}
               </div>
             </div>
 
-            {/* Tail */}
+            {/* Pointer tail with matching border */}
             <div className="
-              absolute -bottom-[7px] right-5
+              absolute -bottom-[8px] right-6
               w-0 h-0
-              border-l-[7px] border-l-transparent
-              border-r-[7px] border-r-transparent
-              border-t-[8px] border-t-white/60 dark:border-t-zinc-900/60
+              border-l-[8px] border-l-transparent
+              border-r-[8px] border-r-transparent
+              border-t-[9px] border-t-white/95 dark:border-t-zinc-900/90
             " />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ══════════════ Cute Glass Orb Avatar ══════════════ */}
+      {/* ══════════════ Scroll-Jump Wrapper ══════════════ */}
       <motion.div
-        className="pointer-events-auto cursor-pointer select-none"
-        style={{ y: smoothJump }}
-        animate={{ y: [0, -12, 0] }}
-        transition={{
-          y: { duration: 3.8, repeat: Infinity, ease: 'easeInOut' },
-        }}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.92 }}
-        onClick={() => {
-          setSpinTrigger((s) => s + 1);
-          const greeting = PAGE_GREETINGS[activePage];
-          if (greeting) showMessage(greeting);
-        }}
-        title="Click me!"
+        style={{ y: smoothJumpY }}
+        className="pointer-events-auto select-none"
       >
-        {/* Outer container — holds everything & does the select-spin */}
+        {/* ══════════════ Idle Float & Hover Scale Wrapper ══════════════ */}
         <motion.div
-          className="relative w-28 h-28 sm:w-32 sm:h-32"
-          animate={{ rotate: spinTrigger * 360 }}
-          transition={{ type: 'spring', stiffness: 50, damping: 10, mass: 1.2 }}
+          animate={{ y: [0, -10, 0] }}
+          transition={{
+            duration: 3.6,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+          whileHover={{ scale: 1.12, y: -6 }}
+          whileTap={{ scale: 0.92 }}
+          onClick={() => {
+            setSpinTrigger((s) => s + 1);
+            const greeting = PAGE_GREETINGS[activePage];
+            if (greeting) showMessage(greeting);
+          }}
+          className="cursor-pointer relative"
+          title="Click to interact!"
         >
+          {/* ══════════════ Futuristic 3D Circular Cyber-Sphere + Fluid Aura ══════════════ */}
+          <motion.div
+            className="relative w-32 h-32 sm:w-36 sm:h-36 flex items-center justify-center"
+            animate={{ rotate: spinTrigger * 360 }}
+            transition={{ type: 'spring', stiffness: 50, damping: 10, mass: 1.2 }}
+          >
 
-          {/* ── Ambient Glow (behind everything) ── */}
-          <div className="absolute inset-[-16px] rounded-full pointer-events-none">
+            {/* ── Layer 1: Ambient Luminous Aura (Soft circulating background fluid vortex) ── */}
             <motion.div
-              className="w-full h-full rounded-full"
+              className="absolute inset-[-16px] sm:inset-[-20px] rounded-full pointer-events-none"
               style={{
-                background: 'radial-gradient(circle, rgba(34,211,238,0.12) 0%, rgba(99,102,241,0.06) 40%, transparent 70%)',
-              }}
-              animate={{ scale: [1, 1.15, 1], opacity: [0.6, 1, 0.6] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          </div>
-
-          {/* ── Layer 1: Glass Body (the sphere) ── */}
-          <div className="
-            absolute inset-0 rounded-full
-            bg-white/25 dark:bg-white/[0.06]
-            backdrop-blur-xl
-            border-2 border-white/50 dark:border-white/[0.12]
-            shadow-[0_0_50px_rgba(34,211,238,0.08),inset_0_-8px_20px_rgba(0,0,0,0.04)]
-            dark:shadow-[0_0_50px_rgba(34,211,238,0.12),inset_0_-8px_20px_rgba(0,0,0,0.15)]
-            overflow-hidden
-          ">
-            {/* Glass highlight — the specular reflection across the top */}
-            <div
-              className="absolute top-0 left-[10%] right-[10%] h-[45%] rounded-b-full pointer-events-none"
-              style={{
-                background: 'linear-gradient(to bottom, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.08) 60%, transparent 100%)',
-              }}
-            />
-
-            {/* Inner body gradient — gives depth */}
-            <div className="
-              absolute inset-[6px] rounded-full
-              bg-gradient-to-b from-cyan-100/30 via-blue-50/15 to-indigo-100/20
-              dark:from-cyan-900/20 dark:via-blue-950/15 dark:to-indigo-950/25
-            " />
-          </div>
-
-          {/* ── Layer 2: The "Eye" / Core ── */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            {/* Outer eye glow */}
-            <motion.div
-              className="absolute w-12 h-12 sm:w-14 sm:h-14 rounded-full"
-              style={{
-                background: 'radial-gradient(circle, rgba(34,211,238,0.5) 0%, rgba(59,130,246,0.25) 50%, transparent 80%)',
-                filter: 'blur(8px)',
+                background:
+                  'radial-gradient(circle, rgba(37,99,235,0.32) 0%, rgba(56,189,248,0.2) 42%, rgba(99,102,241,0.12) 65%, transparent 85%)',
+                filter: 'blur(22px)',
               }}
               animate={{
-                scale: isThinking ? [1, 1.6, 1] : [1, 1.3, 1],
-                opacity: isThinking ? [0.5, 1, 0.5] : [0.6, 0.9, 0.6],
+                rotate: [0, 360],
+                scale: isThinking ? [1, 1.25, 1] : [1, 1.1, 1],
+                opacity: isThinking ? [0.85, 1, 0.85] : [0.65, 0.88, 0.65],
               }}
               transition={{
-                duration: isThinking ? 0.8 : 3,
-                repeat: Infinity,
-                ease: 'easeInOut',
+                rotate: { duration: isThinking ? 5 : 18, repeat: Infinity, ease: 'linear' },
+                scale: { duration: isThinking ? 0.7 : 3.4, repeat: Infinity, ease: 'easeInOut' },
+                opacity: { duration: isThinking ? 0.7 : 3.4, repeat: Infinity, ease: 'easeInOut' },
               }}
             />
 
-            {/* Core iris */}
+            {/* ── Layer 2: Secondary Counter-Flowing Fluid Ribbon (Background Depth Stream) ── */}
             <motion.div
-              className="
-                relative w-8 h-8 sm:w-10 sm:h-10 rounded-full
-                bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-500
-                dark:from-cyan-400 dark:via-blue-400 dark:to-indigo-500
-                shadow-[0_0_20px_rgba(34,211,238,0.5)]
-                dark:shadow-[0_0_25px_rgba(34,211,238,0.6)]
-              "
+              className="absolute inset-[-14px] sm:inset-[-18px] pointer-events-none z-0"
               animate={{
-                scale: isThinking ? [1, 0.85, 1] : [1, 1.08, 1],
+                rotate: isThinking ? [360, 0] : [360, 0],
               }}
               transition={{
-                duration: isThinking ? 0.6 : 2.5,
+                duration: isThinking ? 3.5 : 14,
                 repeat: Infinity,
-                ease: 'easeInOut',
+                ease: 'linear',
               }}
             >
-              {/* Inner pupil highlight */}
-              <div className="absolute top-[20%] left-[22%] w-[28%] h-[28%] rounded-full bg-white/70 blur-[1px]" />
+              <svg viewBox="0 0 180 180" className="w-full h-full" fill="none">
+                <defs>
+                  <linearGradient id="counterFluidLight" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#1e1b4b" stopOpacity="0.85" />
+                    <stop offset="45%" stopColor="#4338ca" stopOpacity="0.8" />
+                    <stop offset="80%" stopColor="#2563eb" stopOpacity="0.4" />
+                    <stop offset="100%" stopColor="#1e1b4b" stopOpacity="0.1" />
+                  </linearGradient>
 
-              {/* Bottom light catch */}
-              <div className="absolute bottom-[15%] right-[18%] w-[18%] h-[18%] rounded-full bg-white/30 blur-[1px]" />
+                  <linearGradient id="counterFluidDark" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#818cf8" stopOpacity="0.9" />
+                    <stop offset="50%" stopColor="#38bdf8" stopOpacity="0.75" />
+                    <stop offset="85%" stopColor="#c084fc" stopOpacity="0.4" />
+                    <stop offset="100%" stopColor="#818cf8" stopOpacity="0.1" />
+                  </linearGradient>
+                </defs>
+
+                {/* Sweeping Liquid Path 2 */}
+                <path
+                  d="M 134 90 C 134 122, 106 142, 60 140 C 20 138, 10 102, 22 66 C 34 30, 68 14, 108 22 C 132 30, 136 56, 124 76"
+                  className="
+                    stroke-[url(#counterFluidLight)] dark:stroke-[url(#counterFluidDark)]
+                    stroke-[4]
+                    drop-shadow-[0_0_10px_rgba(67,56,202,0.35)]
+                    dark:drop-shadow-[0_0_14px_rgba(129,140,248,0.6)]
+                  "
+                  strokeLinecap="round"
+                />
+              </svg>
+
+              {/* Smaller Orbiting Splash Droplets */}
+              {[40, 160, 275].map((angle, i) => (
+                <motion.div
+                  key={i}
+                  className="
+                    absolute w-2.5 h-2.5 rounded-full
+                    bg-indigo-600 dark:bg-indigo-300
+                    shadow-[0_0_8px_2px_#4338ca]
+                    dark:shadow-[0_0_10px_2px_#818cf8]
+                  "
+                  style={{
+                    left: `calc(50% + ${48 * Math.cos((angle * Math.PI) / 180)}% - 5px)`,
+                    top: `calc(50% + ${48 * Math.sin((angle * Math.PI) / 180)}% - 5px)`,
+                  }}
+                  animate={{
+                    opacity: [0.6, 1, 0.6],
+                    scale: [0.85, 1.25, 0.85],
+                  }}
+                  transition={{
+                    duration: 2.2,
+                    repeat: Infinity,
+                    delay: i * 0.45,
+                    ease: 'easeInOut',
+                  }}
+                />
+              ))}
             </motion.div>
-          </div>
 
-          {/* ── Layer 3: Orbital Halo Ring ── */}
-          <motion.div
-            className="absolute inset-[-10px] sm:inset-[-12px] pointer-events-none"
-            style={{ transformStyle: 'preserve-3d' }}
-            animate={{
-              rotateX: 68,
-              rotateZ: isThinking ? [0, 360] : 25,
-              rotate: isThinking ? [0, 360] : 0,
-            }}
-            transition={
-              isThinking
-                ? { rotate: { duration: 1.8, repeat: Infinity, ease: 'linear' }, rotateZ: { duration: 1.8, repeat: Infinity, ease: 'linear' } }
-                : { rotate: { type: 'spring', stiffness: 40, damping: 15 }, rotateZ: { duration: 0 } }
-            }
-          >
-            {/* Main ring */}
+            {/* ── Layer 3: The 3D Glass Sphere (Circular, Tactile, High-End Luxury) ── */}
             <div className="
-              absolute inset-0 rounded-full
-              border-[2.5px] border-cyan-400/25 dark:border-cyan-400/20
-              shadow-[0_0_12px_rgba(34,211,238,0.15)]
-            " />
+              relative z-10
+              w-24 h-24 sm:w-28 sm:h-28
+              rounded-full
+              flex items-center justify-center
+              overflow-hidden
+              border-2 border-slate-900/85 dark:border-cyan-400/85
+              bg-gradient-to-b from-slate-900/[0.12] via-blue-950/[0.22] to-slate-950/[0.42]
+              dark:bg-gradient-to-b dark:from-slate-900/70 dark:via-blue-950/80 dark:to-cyan-950/90
+              shadow-[0_16px_36px_rgba(15,23,42,0.38),inset_0_-10px_22px_rgba(15,23,42,0.45),inset_0_4px_14px_rgba(255,255,255,0.7)]
+              dark:shadow-[0_0_32px_rgba(34,211,238,0.5),inset_0_-10px_24px_rgba(0,0,0,0.7),inset_0_4px_14px_rgba(34,211,238,0.6)]
+              backdrop-blur-xl
+            ">
 
-            {/* Orbiting data nodes */}
-            {[0, 90, 200, 310].map((angle, i) => (
+              {/* ── Internal Plasma Nucleus (Energy Core) ── */}
               <motion.div
-                key={i}
                 className="
-                  absolute w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full
-                  bg-cyan-400 dark:bg-cyan-300
-                  shadow-[0_0_8px_2px_rgba(34,211,238,0.5)]
+                  absolute w-12 h-12 sm:w-14 sm:h-14 rounded-full
+                  bg-gradient-to-tr from-blue-700 via-indigo-600 to-cyan-400
+                  dark:from-cyan-400 dark:via-sky-400 dark:to-indigo-500
+                  shadow-[0_0_24px_rgba(37,99,235,0.85)]
+                  dark:shadow-[0_0_32px_rgba(34,211,238,0.9)]
                 "
-                style={{
-                  left: `calc(50% + ${48 * Math.cos((angle * Math.PI) / 180)}% - 5px)`,
-                  top: `calc(50% + ${48 * Math.sin((angle * Math.PI) / 180)}% - 5px)`,
-                }}
                 animate={{
-                  opacity: [0.5, 1, 0.5],
-                  scale: [0.8, 1.3, 0.8],
+                  scale: isThinking ? [0.95, 1.28, 0.95] : [0.96, 1.08, 0.96],
+                  opacity: isThinking ? [0.85, 1, 0.85] : [0.75, 0.92, 0.75],
                 }}
                 transition={{
-                  duration: 2.2,
+                  duration: isThinking ? 0.5 : 2.4,
                   repeat: Infinity,
-                  delay: i * 0.4,
                   ease: 'easeInOut',
                 }}
               />
-            ))}
-          </motion.div>
 
-          {/* ── Second Halo (counter-orbit) ── */}
-          <motion.div
-            className="absolute inset-[-6px] sm:inset-[-8px] pointer-events-none"
-            style={{ transformStyle: 'preserve-3d' }}
-            animate={{
-              rotateX: -55,
-              rotateZ: isThinking ? [360, 0] : -20,
-              rotate: isThinking ? [360, 0] : 0,
-            }}
-            transition={
-              isThinking
-                ? { rotate: { duration: 2.4, repeat: Infinity, ease: 'linear' }, rotateZ: { duration: 2.4, repeat: Infinity, ease: 'linear' } }
-                : { rotate: { type: 'spring', stiffness: 40, damping: 15 }, rotateZ: { duration: 0 } }
-            }
-          >
-            <div className="
-              absolute inset-0 rounded-full
-              border-[1.5px] border-indigo-400/15 dark:border-indigo-400/12
-              shadow-[0_0_8px_rgba(99,102,241,0.1)]
-            " />
+              {/* ── Internal Circular Tech Aperture & Synaptic Filaments ── */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <svg viewBox="0 0 100 100" className="w-full h-full p-2" fill="none">
+                  {/* Concentric Cyber Reticle Rings */}
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="38"
+                    className="stroke-indigo-400/40 dark:stroke-cyan-400/40"
+                    strokeWidth="1"
+                    strokeDasharray="4 3"
+                  />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="28"
+                    className="stroke-blue-500/50 dark:stroke-cyan-300/50"
+                    strokeWidth="1.2"
+                  />
 
-            {/* Smaller accent nodes */}
-            {[45, 180, 270].map((angle, i) => (
-              <motion.div
-                key={i}
+                  {/* Neural Synaptic Connections */}
+                  <path
+                    d="M 32 44 Q 50 36 68 44"
+                    className="stroke-blue-500 dark:stroke-cyan-300"
+                    strokeWidth="1.2"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M 32 58 Q 50 64 68 58"
+                    className="stroke-indigo-500 dark:stroke-cyan-300"
+                    strokeWidth="1.2"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M 50 28 L 50 72"
+                    className="stroke-cyan-500 dark:stroke-sky-200"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M 36 36 L 64 64"
+                    className="stroke-blue-400/70 dark:stroke-indigo-300/70"
+                    strokeWidth="1"
+                  />
+                  <path
+                    d="M 64 36 L 36 64"
+                    className="stroke-indigo-400/70 dark:stroke-cyan-400/70"
+                    strokeWidth="1"
+                  />
+
+                  {/* Synaptic Junction Nodes */}
+                  <circle cx="50" cy="50" r="3.6" className="fill-blue-600 dark:fill-cyan-100 shadow-md" />
+                  <circle cx="38" cy="40" r="2.4" className="fill-indigo-600 dark:fill-cyan-300" />
+                  <circle cx="62" cy="40" r="2.4" className="fill-blue-600 dark:fill-cyan-300" />
+                  <circle cx="38" cy="60" r="2.4" className="fill-indigo-700 dark:fill-cyan-300" />
+                  <circle cx="62" cy="60" r="2.4" className="fill-blue-700 dark:fill-cyan-300" />
+                  <circle cx="50" cy="32" r="2" className="fill-cyan-600 dark:fill-sky-200" />
+                  <circle cx="50" cy="68" r="2" className="fill-cyan-600 dark:fill-sky-200" />
+                </svg>
+              </div>
+
+              {/* ── 3D Spherical Specular Dome Glare (Apple Glass Volume) ── */}
+              <div
                 className="
-                  absolute w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full
-                  bg-indigo-400 dark:bg-indigo-300
-                  shadow-[0_0_6px_1px_rgba(99,102,241,0.4)]
+                  absolute top-1 left-2 sm:top-2 sm:left-3
+                  w-[62%] h-[40%]
+                  rounded-full
+                  bg-gradient-to-b from-white/80 via-white/20 to-transparent
+                  blur-[0.5px]
+                  pointer-events-none
                 "
-                style={{
-                  left: `calc(50% + ${46 * Math.cos((angle * Math.PI) / 180)}% - 4px)`,
-                  top: `calc(50% + ${46 * Math.sin((angle * Math.PI) / 180)}% - 4px)`,
-                }}
-                animate={{ opacity: [0.4, 0.9, 0.4] }}
-                transition={{
-                  duration: 2.8,
-                  repeat: Infinity,
-                  delay: i * 0.6,
-                  ease: 'easeInOut',
-                }}
+                style={{ transform: 'rotate(-28deg)' }}
               />
-            ))}
-          </motion.div>
 
+              {/* ── Subtle Bottom-Right Ambient Bounce Glow ── */}
+              <div className="
+                absolute bottom-1 right-2
+                w-[50%] h-[26%]
+                rounded-full
+                bg-cyan-400/30 dark:bg-cyan-300/40
+                blur-[5px]
+                pointer-events-none
+              " />
+            </div>
+
+            {/* ── Layer 4: Primary Liquid Ribbon Stream (Foreground Circulating Flow with Droplets) ── */}
+            <motion.div
+              className="absolute inset-[-18px] sm:inset-[-22px] pointer-events-none z-20"
+              animate={{
+                rotate: isThinking ? [0, 360] : [0, 360],
+              }}
+              transition={{
+                duration: isThinking ? 2.4 : 10,
+                repeat: Infinity,
+                ease: 'linear',
+              }}
+            >
+              <svg viewBox="0 0 200 200" className="w-full h-full" fill="none">
+                <defs>
+                  {/* Fluid Stream Gradient Light Mode */}
+                  <linearGradient id="fluidStreamLight" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#0f172a" stopOpacity="0.9" />
+                    <stop offset="35%" stopColor="#2563eb" stopOpacity="0.95" />
+                    <stop offset="70%" stopColor="#38bdf8" stopOpacity="0.95" />
+                    <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.8" />
+                  </linearGradient>
+
+                  {/* Fluid Stream Gradient Dark Mode */}
+                  <linearGradient id="fluidStreamDark" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.95" />
+                    <stop offset="45%" stopColor="#22d3ee" stopOpacity="1" />
+                    <stop offset="80%" stopColor="#818cf8" stopOpacity="0.9" />
+                    <stop offset="100%" stopColor="#c084fc" stopOpacity="0.85" />
+                  </linearGradient>
+
+                  {/* Liquid Glass Highlight Spine */}
+                  <linearGradient id="fluidSpineGleam" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#ffffff" stopOpacity="0.85" />
+                    <stop offset="50%" stopColor="#ffffff" stopOpacity="0.35" />
+                    <stop offset="100%" stopColor="#ffffff" stopOpacity="0.05" />
+                  </linearGradient>
+                </defs>
+
+                {/* Sweeping Liquid Ribbon Path with Organic Wave Flow */}
+                <path
+                  d="M 32 100 C 32 50, 68 24, 120 28 C 170 32, 180 75, 166 120 C 150 165, 96 178, 56 158 C 34 144, 28 120, 38 100 Z"
+                  className="
+                    stroke-[url(#fluidStreamLight)] dark:stroke-[url(#fluidStreamDark)]
+                    stroke-[5.5]
+                    drop-shadow-[0_0_12px_rgba(37,99,235,0.45)]
+                    dark:drop-shadow-[0_0_18px_rgba(34,211,238,0.75)]
+                  "
+                  strokeLinecap="round"
+                />
+
+                {/* Inner Specular Highlight Spine (Liquid Glass Glaze) */}
+                <path
+                  d="M 42 100 C 42 60, 74 38, 118 40 C 158 42, 168 80, 154 116 C 140 152, 95 162, 64 148"
+                  stroke="url(#fluidSpineGleam)"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+              </svg>
+
+              {/* Orbiting Liquid Droplet Beads */}
+              {[0, 85, 180, 270].map((angle, i) => (
+                <motion.div
+                  key={i}
+                  className="
+                    absolute w-3.5 h-3.5 rounded-full
+                    bg-gradient-to-tr from-blue-700 via-cyan-400 to-white
+                    dark:from-cyan-300 dark:via-sky-200 dark:to-white
+                    shadow-[0_0_12px_3px_#2563eb]
+                    dark:shadow-[0_0_16px_4px_#22d3ee]
+                  "
+                  style={{
+                    left: `calc(50% + ${48 * Math.cos((angle * Math.PI) / 180)}% - 7px)`,
+                    top: `calc(50% + ${48 * Math.sin((angle * Math.PI) / 180)}% - 7px)`,
+                  }}
+                  animate={{
+                    scale: isThinking ? [0.85, 1.45, 0.85] : [0.95, 1.25, 0.95],
+                  }}
+                  transition={{
+                    duration: isThinking ? 0.6 : 1.8,
+                    repeat: Infinity,
+                    delay: i * 0.35,
+                    ease: 'easeInOut',
+                  }}
+                >
+                  {/* Droplet Highlight Glint */}
+                  <div className="absolute top-[18%] left-[20%] w-[32%] h-[32%] rounded-full bg-white/90 blur-[0.3px]" />
+                </motion.div>
+              ))}
+            </motion.div>
+
+          </motion.div>
         </motion.div>
       </motion.div>
     </div>

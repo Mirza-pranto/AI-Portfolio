@@ -19,11 +19,6 @@ export default function Header() {
     setMounted(true);
   }, []);
 
-  const initials = portfolioData.name
-    .split(' ')
-    .map((n) => n[0])
-    .join('');
-
   const handleHomeClick = () => {
     if (activePage === 'home') return;
     setActivePage('home');
@@ -44,21 +39,18 @@ export default function Header() {
       transition={{ duration: 0.5 }}
       className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 py-3.5 backdrop-blur-sm"
     >
-      {/* Left: Spacer to balance the top-right button group */}
-      <div className="w-20" />
-
-      {/* Center: Avatar */}
-      <motion.div
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
+      <motion.button
+        whileHover={{ scale: 1.03 }}
+        whileTap={{ scale: 0.97 }}
         onClick={handleHomeClick}
+        aria-label={`${portfolioData.name} — Go to Home`}
         title="Go to Home"
-        className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-violet-500 flex items-center justify-center text-xs font-bold text-white shadow-lg shadow-violet-500/20 cursor-pointer"
+        className="whitespace-nowrap text-left text-sm font-semibold tracking-wide text-zinc-900 dark:text-white sm:text-base"
       >
-        {initials}
-      </motion.div>
+        {portfolioData.name}
+      </motion.button>
 
-      {/* Right: Actions (Home button & Theme Toggle) */}
+      {/* Right: Actions */}
       <div className="flex items-center gap-2 justify-end w-20">
         {/* Home Button */}
         <motion.button
