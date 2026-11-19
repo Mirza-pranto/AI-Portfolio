@@ -113,11 +113,21 @@ function ThinkingDots() {
   );
 }
 
+/* Module-level deduplication to prevent double-firing in multi-render modes */
+let lastReactionProjectId = '';
+let lastReactionTimestamp = 0;
+
 /* ═════════════════════════════════════════════════
    Main AICompanion Component
    ═════════════════════════════════════════════════ */
 
-function AICompanion() {
+interface AICompanionProps {
+  variant?: 'floating' | 'docked';
+  className?: string;
+}
+
+function AICompanion({ variant = 'floating', className = '' }: AICompanionProps) {
+  const isDocked = variant === 'docked';
   const {
     expandedItemType,
     expandedItemId,
@@ -184,6 +194,13 @@ function AICompanion() {
   /* ── Fetch AI-generated project reaction ── */
   const fetchProjectReaction = useCallback(
     async (projectId: string) => {
+      const now = Date.now();
+      if (lastReactionProjectId === projectId && now - lastReactionTimestamp < 3500) {
+        return;
+      }
+      lastReactionProjectId = projectId;
+      lastReactionTimestamp = now;
+
       const proj = portfolioData.projects.find(
         (p) => String(p.id) === projectId
       );
@@ -318,18 +335,27 @@ function AICompanion() {
   const showBubble = companionMessage !== null || isGenerating;
 
   return (
-    <div className="fixed bottom-36 right-3 sm:bottom-5 sm:right-5 z-50 flex flex-col items-end gap-2.5 pointer-events-none">
-
+    <div
+      className={
+        isDocked
+          ? `relative w-full h-full flex items-center justify-center pointer-events-auto select-none ${className}`
+          : `hidden md:flex fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 flex-col items-end gap-2.5 pointer-events-none ${className}`
+      }
+    >
       {/* ══════════════ Speech Bubble (Compact, high-contrast glassmorphism) ══════════════ */}
       <AnimatePresence mode="wait">
         {showBubble && (
           <motion.div
             key={isGenerating ? (isRenderingUi ? 'generating' : 'thinking') : companionMessage}
-            initial={{ opacity: 0, y: 12, scale: 0.9 }}
+            initial={{ opacity: 0, y: isDocked ? 6 : 12, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.92 }}
             transition={{ type: 'spring', stiffness: 420, damping: 26 }}
-            className="relative max-w-[210px] sm:max-w-[230px] pointer-events-auto mr-2"
+            className={
+              isDocked
+                ? "absolute bottom-[calc(100%+10px)] right-0 w-[230px] max-w-[calc(100vw-36px)] pointer-events-auto z-50 mr-1"
+                : "relative max-w-[210px] sm:max-w-[230px] pointer-events-auto mr-2"
+            }
           >
             {/* Glassmorphic bubble body with crisp light mode border and contrast */}
             <div className="
@@ -359,20 +385,20 @@ function AICompanion() {
             </div>
 
             {/* Pointer tail with matching border */}
-            <div className="
-              absolute -bottom-[7px] right-5
+            <div className={`
+              absolute -bottom-[7px] ${isDocked ? 'right-7' : 'right-5'}
               w-0 h-0
               border-l-[7px] border-l-transparent
               border-r-[7px] border-r-transparent
               border-t-[8px] border-t-white/95 dark:border-t-zinc-900/90
-            " />
+            `} />
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* ══════════════ Scroll-Jump Wrapper ══════════════ */}
       <motion.div
-        style={{ y: smoothJumpY }}
+        style={isDocked ? undefined : { y: smoothJumpY }}
         className="pointer-events-auto select-none"
       >
         {/* ══════════════ Idle Float, Hover Scale, & Page Transition Effort Wrapper ══════════════ */}
@@ -383,7 +409,14 @@ function AICompanion() {
                   scale: [1, 0.68, 0.68, 0.68, 0.68, 0.68, 0.68, 0.68, 0.68, 1.2, 0.96, 1],
                   x: [0, 0, -4, 4, -6, 6, -5, 5, -4, 4, 0, 0],
                   rotate: [0, -3, 6, -7, 9, -9, 8, -7, 6, -4, 0, 0],
-                  y: [0, 6, 7, 8, 8, 8, 8, 7, 6, -14, 2, 0],
+                  y: isDocked ? [0, 2, 3, 3, 3, 3, 3, 2, 2, -4, 1, 0] : [0, 6, 7, 8, 8, 8, 8, 7, 6, -14, 2, 0],
+                }
+              : isDocked
+              ? {
+                  y: [0, -2.5, 0],
+                  scale: 1,
+                  x: 0,
+                  rotate: 0,
                 }
               : {
                   y: [0, -8, 0],
@@ -400,18 +433,22 @@ function AICompanion() {
                   ease: 'easeInOut',
                 }
               : {
-                  y: { duration: 3.4, repeat: Infinity, ease: 'easeInOut' },
+                  y: { duration: isDocked ? 2.8 : 3.4, repeat: Infinity, ease: 'easeInOut' },
                 }
           }
-          whileHover={{ scale: 1.1, y: -4 }}
+          whileHover={{ scale: isDocked ? 1.05 : 1.1, y: isDocked ? -2 : -4 }}
           whileTap={{ scale: 0.92 }}
           onClick={handleAvatarClick}
-          className="cursor-pointer relative"
+          className="cursor-pointer relative flex items-center justify-center"
           title="Click to interact!"
         >
           {/* ══════════════ Compact 3D Circular Cyber-Sphere + Fluid Aura ══════════════ */}
           <motion.div
-            className="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center"
+            className={`relative flex items-center justify-center ${
+              isDocked
+                ? 'w-16 h-14 scale-[0.58] origin-center'
+                : 'w-24 h-24 sm:w-28 sm:h-28'
+            }`}
             style={{ perspective: 850, transformStyle: 'preserve-3d' }}
             animate={{ rotate: spinTrigger * 360 }}
             transition={{ type: 'spring', stiffness: 50, damping: 10, mass: 1.2 }}

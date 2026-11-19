@@ -15,7 +15,11 @@ const navItems: { id: PageType; label: string; icon: React.ReactNode }[] = [
   { id: 'contact', label: 'Contact', icon: <User className="w-4 h-4" /> },
 ];
 
-export default function NavigationPills() {
+interface NavigationPillsProps {
+  variant?: 'wrap' | 'slider';
+}
+
+export default function NavigationPills({ variant = 'wrap' }: NavigationPillsProps) {
   const { activePage, setActivePage, showQuickQuestions, toggleQuickQuestions } =
     usePortfolioStore();
   const setIsRenderingUi = usePortfolioStore((s) => s.setIsRenderingUi);
@@ -48,6 +52,33 @@ export default function NavigationPills() {
       }, 1500);
     }
   };
+
+  if (variant === 'slider') {
+    return (
+      <div className="relative w-full overflow-hidden">
+        <div className="flex items-center gap-1.5 overflow-x-auto scroll-smooth py-1 px-1 touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {navItems.map((item) => {
+            const isActive = activePage === item.id;
+            return (
+              <motion.button
+                key={item.id}
+                whileTap={{ scale: 0.94 }}
+                onClick={() => handleNavigate(item.id)}
+                className={`shrink-0 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer border select-none ${
+                  isActive
+                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm shadow-indigo-600/30'
+                    : 'bg-slate-100/90 hover:bg-indigo-50 border-slate-200/90 text-slate-700 hover:text-indigo-700 dark:bg-zinc-800/90 dark:border-zinc-700/80 dark:text-zinc-300 dark:hover:text-white'
+                }`}
+              >
+                {item.icon}
+                <span className="whitespace-nowrap">{item.label}</span>
+              </motion.button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
