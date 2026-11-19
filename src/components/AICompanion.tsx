@@ -496,27 +496,11 @@ function AICompanion({ variant = 'floating', className = '' }: AICompanionProps)
               }}
             >
               <svg viewBox="0 0 180 180" className="w-full h-full" fill="none">
-                <defs>
-                  <linearGradient id="counterFluidLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#818cf8" stopOpacity="0.95" />
-                    <stop offset="35%" stopColor="#38bdf8" stopOpacity="0.9" />
-                    <stop offset="70%" stopColor="#6366f1" stopOpacity="0.8" />
-                    <stop offset="100%" stopColor="#a855f7" stopOpacity="0.3" />
-                  </linearGradient>
-
-                  <linearGradient id="counterFluidDark" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.9" />
-                    <stop offset="40%" stopColor="#6366f1" stopOpacity="0.85" />
-                    <stop offset="75%" stopColor="#9333ea" stopOpacity="0.6" />
-                    <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.25" />
-                  </linearGradient>
-                </defs>
-
                 {/* Track 1: Outer Sweeping Counter-Ellipse */}
                 <path
                   d="M 148 90 C 148 126, 118 152, 68 148 C 22 144, 10 106, 24 64 C 38 22, 74 6, 120 14 C 148 20, 154 52, 138 78"
                   className="
-                    stroke-[url(#counterFluidLight)] dark:stroke-[url(#counterFluidDark)]
+                    counter-fluid
                     drop-shadow-[0_0_6px_rgba(99,102,241,0.3)]
                     dark:drop-shadow-[0_0_8px_rgba(124,58,237,0.35)]
                   "
@@ -528,7 +512,7 @@ function AICompanion({ variant = 'floating', className = '' }: AICompanionProps)
                 <path
                   d="M 136 90 C 136 120, 110 140, 72 136 C 34 132, 22 100, 34 68 C 46 36, 76 22, 112 28 C 134 32, 140 56, 128 78"
                   className="
-                    stroke-[url(#counterFluidLight)] dark:stroke-[url(#counterFluidDark)]
+                    counter-fluid
                     opacity-75
                   "
                   strokeWidth="1.0"
@@ -539,7 +523,7 @@ function AICompanion({ variant = 'floating', className = '' }: AICompanionProps)
                 <path
                   d="M 142 90 C 142 123, 114 146, 70 142 C 28 138, 16 103, 29 66 C 42 29, 75 14, 116 21 C 141 26, 147 54, 133 78"
                   className="
-                    stroke-[url(#counterFluidLight)] dark:stroke-[url(#counterFluidDark)]
+                    counter-fluid
                     opacity-50
                   "
                   strokeWidth="0.8"
@@ -654,94 +638,6 @@ function AICompanion({ variant = 'floating', className = '' }: AICompanionProps)
                 transformStyle: 'preserve-3d',
               }}
             >
-              {/* Common SVG Definitions for All 3D Rings */}
-              <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
-                <defs>
-                  {/* Primary Equatorial Gradients */}
-                  <linearGradient id="ringEquatorGradLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.95" />
-                    <stop offset="30%" stopColor="#2563eb" stopOpacity="0.95" />
-                    <stop offset="65%" stopColor="#06b6d4" stopOpacity="0.95" />
-                    <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.9" />
-                  </linearGradient>
-                  <linearGradient id="ringEquatorGradDark" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#6366f1" stopOpacity="0.9" />
-                    <stop offset="35%" stopColor="#8b5cf6" stopOpacity="0.95" />
-                    <stop offset="70%" stopColor="#a855f7" stopOpacity="0.85" />
-                    <stop offset="100%" stopColor="#6366f1" stopOpacity="0.75" />
-                  </linearGradient>
-
-                  {/* Primary Diagonal Gradients (Ascending) */}
-                  <linearGradient id="ringDiag1GradLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#818cf8" stopOpacity="0.95" />
-                    <stop offset="35%" stopColor="#38bdf8" stopOpacity="0.9" />
-                    <stop offset="70%" stopColor="#6366f1" stopOpacity="0.8" />
-                    <stop offset="100%" stopColor="#a855f7" stopOpacity="0.4" />
-                  </linearGradient>
-                  <linearGradient id="ringDiag1GradDark" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.9" />
-                    <stop offset="40%" stopColor="#6366f1" stopOpacity="0.85" />
-                    <stop offset="75%" stopColor="#9333ea" stopOpacity="0.6" />
-                    <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.3" />
-                  </linearGradient>
-
-                  {/* Opposing Diagonal Gradients (Descending) */}
-                  <linearGradient id="ringDiag2GradLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#2563eb" stopOpacity="0.95" />
-                    <stop offset="35%" stopColor="#6366f1" stopOpacity="0.9" />
-                    <stop offset="70%" stopColor="#8b5cf6" stopOpacity="0.8" />
-                    <stop offset="100%" stopColor="#0ea5e9" stopOpacity="0.4" />
-                  </linearGradient>
-                  <linearGradient id="ringDiag2GradDark" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.9" />
-                    <stop offset="40%" stopColor="#6366f1" stopOpacity="0.85" />
-                    <stop offset="75%" stopColor="#a855f7" stopOpacity="0.65" />
-                    <stop offset="100%" stopColor="#4338ca" stopOpacity="0.35" />
-                  </linearGradient>
-
-                  {/* Polar Meridian Gradients (Vertical Longitude) */}
-                  <linearGradient id="ringPolarGradLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#6366f1" stopOpacity="0.95" />
-                    <stop offset="35%" stopColor="#0ea5e9" stopOpacity="0.9" />
-                    <stop offset="70%" stopColor="#818cf8" stopOpacity="0.8" />
-                    <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.4" />
-                  </linearGradient>
-                  <linearGradient id="ringPolarGradDark" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#a855f7" stopOpacity="0.9" />
-                    <stop offset="35%" stopColor="#818cf8" stopOpacity="0.85" />
-                    <stop offset="70%" stopColor="#6366f1" stopOpacity="0.75" />
-                    <stop offset="100%" stopColor="#9333ea" stopOpacity="0.35" />
-                  </linearGradient>
-
-                  {/* Oblique Precession Gradients */}
-                  <linearGradient id="ringObliqueGradLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.9" />
-                    <stop offset="40%" stopColor="#a855f7" stopOpacity="0.85" />
-                    <stop offset="75%" stopColor="#38bdf8" stopOpacity="0.75" />
-                    <stop offset="100%" stopColor="#6366f1" stopOpacity="0.3" />
-                  </linearGradient>
-                  <linearGradient id="ringObliqueGradDark" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#6366f1" stopOpacity="0.85" />
-                    <stop offset="40%" stopColor="#c084fc" stopOpacity="0.85" />
-                    <stop offset="75%" stopColor="#7c3aed" stopOpacity="0.7" />
-                    <stop offset="100%" stopColor="#818cf8" stopOpacity="0.3" />
-                  </linearGradient>
-
-                  {/* Backward-compatibility aliases */}
-                  <linearGradient id="ringGradientPrimaryLight" href="#ringEquatorGradLight" />
-                  <linearGradient id="ringGradientPrimaryDark" href="#ringEquatorGradDark" />
-                  <linearGradient id="ringGradientSecondaryLight" href="#ringDiag1GradLight" />
-                  <linearGradient id="ringGradientSecondaryDark" href="#ringDiag1GradDark" />
-
-                  {/* Specular Front Curvature Spine Highlight */}
-                  <linearGradient id="ringSpineGleam" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                    <stop offset="50%" stopColor="#ffffff" stopOpacity="0.45" />
-                    <stop offset="100%" stopColor="#ffffff" stopOpacity="0.05" />
-                  </linearGradient>
-                </defs>
-              </svg>
-
               {/* ── 3D Ring 1: Equatorial Front-Tilt Orbit (Horizontal Plane passing across front face) ── */}
               <motion.div
                 className="absolute w-full h-full flex items-center justify-center"
@@ -771,7 +667,7 @@ function AICompanion({ variant = 'floating', className = '' }: AICompanionProps)
                     <circle
                       cx="100" cy="100" r="74"
                       className="
-                        stroke-[url(#ringEquatorGradLight)] dark:stroke-[url(#ringEquatorGradDark)]
+                        ring-equator
                         drop-shadow-[0_0_8px_rgba(99,102,241,0.35)]
                         dark:drop-shadow-[0_0_9px_rgba(129,140,248,0.4)]
                       "
@@ -781,14 +677,14 @@ function AICompanion({ variant = 'floating', className = '' }: AICompanionProps)
                     {/* Concentric Inner Rail */}
                     <circle
                       cx="100" cy="100" r="66"
-                      className="stroke-[url(#ringEquatorGradLight)] dark:stroke-[url(#ringEquatorGradDark)] opacity-80"
+                      className="ring-equator opacity-80"
                       strokeWidth="0.9"
                     />
 
                     {/* Micro Dashed Track */}
                     <circle
                       cx="100" cy="100" r="70"
-                      className="stroke-[url(#ringEquatorGradLight)] dark:stroke-[url(#ringEquatorGradDark)] opacity-60"
+                      className="ring-equator opacity-60"
                       strokeWidth="0.8"
                       strokeDasharray="3 5"
                     />
@@ -863,7 +759,7 @@ function AICompanion({ variant = 'floating', className = '' }: AICompanionProps)
                     <circle
                       cx="100" cy="100" r="77"
                       className="
-                        stroke-[url(#ringDiag1GradLight)] dark:stroke-[url(#ringDiag1GradDark)]
+                        ring-diag1
                         drop-shadow-[0_0_7px_rgba(56,189,248,0.35)]
                         dark:drop-shadow-[0_0_8px_rgba(124,58,237,0.35)]
                       "
@@ -873,14 +769,14 @@ function AICompanion({ variant = 'floating', className = '' }: AICompanionProps)
                     {/* Concentric Inner Rail */}
                     <circle
                       cx="100" cy="100" r="63"
-                      className="stroke-[url(#ringDiag1GradLight)] dark:stroke-[url(#ringDiag1GradDark)] opacity-75"
+                      className="ring-diag1 opacity-75"
                       strokeWidth="0.8"
                     />
 
                     {/* Dashed Sub-Rail */}
                     <circle
                       cx="100" cy="100" r="70"
-                      className="stroke-[url(#ringDiag1GradLight)] dark:stroke-[url(#ringDiag1GradDark)] opacity-55"
+                      className="ring-diag1 opacity-55"
                       strokeWidth="0.75"
                       strokeDasharray="2.5 4"
                     />
@@ -944,7 +840,7 @@ function AICompanion({ variant = 'floating', className = '' }: AICompanionProps)
                     <circle
                       cx="100" cy="100" r="80"
                       className="
-                        stroke-[url(#ringDiag2GradLight)] dark:stroke-[url(#ringDiag2GradDark)]
+                        ring-diag2
                         drop-shadow-[0_0_7px_rgba(99,102,241,0.3)]
                         dark:drop-shadow-[0_0_8px_rgba(168,85,247,0.35)]
                       "
@@ -954,14 +850,14 @@ function AICompanion({ variant = 'floating', className = '' }: AICompanionProps)
                     {/* Inner Fine Rail */}
                     <circle
                       cx="100" cy="100" r="65"
-                      className="stroke-[url(#ringDiag2GradLight)] dark:stroke-[url(#ringDiag2GradDark)] opacity-70"
+                      className="ring-diag2 opacity-70"
                       strokeWidth="0.8"
                     />
 
                     {/* Fine Cadence Dots */}
                     <circle
                       cx="100" cy="100" r="72"
-                      className="stroke-[url(#ringDiag2GradLight)] dark:stroke-[url(#ringDiag2GradDark)] opacity-55"
+                      className="ring-diag2 opacity-55"
                       strokeWidth="0.75"
                       strokeDasharray="1.5 3.5"
                     />
@@ -1025,7 +921,7 @@ function AICompanion({ variant = 'floating', className = '' }: AICompanionProps)
                     <circle
                       cx="100" cy="100" r="83"
                       className="
-                        stroke-[url(#ringPolarGradLight)] dark:stroke-[url(#ringPolarGradDark)]
+                        ring-polar
                         opacity-85
                         drop-shadow-[0_0_7px_rgba(14,165,233,0.3)]
                         dark:drop-shadow-[0_0_8px_rgba(139,92,246,0.3)]
@@ -1036,14 +932,14 @@ function AICompanion({ variant = 'floating', className = '' }: AICompanionProps)
                     {/* Concentric Polar Sub-Rail */}
                     <circle
                       cx="100" cy="100" r="75"
-                      className="stroke-[url(#ringPolarGradLight)] dark:stroke-[url(#ringPolarGradDark)] opacity-65"
+                      className="ring-polar opacity-65"
                       strokeWidth="0.8"
                     />
 
                     {/* Dashed Meridian Track */}
                     <circle
                       cx="100" cy="100" r="79"
-                      className="stroke-[url(#ringPolarGradLight)] dark:stroke-[url(#ringPolarGradDark)] opacity-55"
+                      className="ring-polar opacity-55"
                       strokeWidth="0.75"
                       strokeDasharray="3 5.5"
                     />
@@ -1098,7 +994,7 @@ function AICompanion({ variant = 'floating', className = '' }: AICompanionProps)
                     <circle
                       cx="100" cy="100" r="87"
                       className="
-                        stroke-[url(#ringObliqueGradLight)] dark:stroke-[url(#ringObliqueGradDark)]
+                        ring-oblique
                         opacity-80
                         drop-shadow-[0_0_8px_rgba(99,102,241,0.3)]
                         dark:drop-shadow-[0_0_9px_rgba(192,132,252,0.35)]
@@ -1109,7 +1005,7 @@ function AICompanion({ variant = 'floating', className = '' }: AICompanionProps)
                     {/* Fine Cadence Ring */}
                     <circle
                       cx="100" cy="100" r="82"
-                      className="stroke-[url(#ringObliqueGradLight)] dark:stroke-[url(#ringObliqueGradDark)] opacity-60"
+                      className="ring-oblique opacity-60"
                       strokeWidth="0.75"
                       strokeDasharray="2 4"
                     />

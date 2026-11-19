@@ -130,3 +130,46 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* AI Companion Gyroscope SVG Gradient Strokes */
+.ring-equator {
+  stroke: url(#ringEquatorGradLight);
+}
+.dark .ring-equator {
+  stroke: url(#ringEquatorGradDark);
+}
+
+.ring-diag1 {
+  stroke: url(#ringDiag1GradLight);
+}
+.dark .ring-diag1 {
+  stroke: url(#ringDiag1GradDark);
+}
+
+.ring-diag2 {
+  stroke: url(#ringDiag2GradLight);
+}
+.dark .ring-diag2 {
+  stroke: url(#ringDiag2GradDark);
+}
+
+.ring-polar {
+  stroke: url(#ringPolarGradLight);
+}
+.dark .ring-polar {
+  stroke: url(#ringPolarGradDark);
+}
+
+.ring-oblique {
+  stroke: url(#ringObliqueGradLight);
+}
+.dark .ring-oblique {
+  stroke: url(#ringObliqueGradDark);
+}
+
+.counter-fluid {
+  stroke: url(#counterFluidLight);
+}
+.dark .counter-fluid {
+  stroke: url(#counterFluidDark);
+}

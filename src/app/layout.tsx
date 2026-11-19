@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import ThemeProvider from "@/components/ThemeProvider";
 import AICompanion from "@/components/AICompanion";
+import AICompanionDefs from "@/components/AICompanionDefs";
 import HomeGuideOrb from "@/components/HomeGuideOrb";
 import "./globals.css";
 
@@ -31,6 +32,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-[#eceff3] text-slate-900 dark:bg-[#09090d] dark:text-zinc-100 min-h-screen relative`}
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          {/* Global SVG Paint Server definitions for AI Companion */}
+          <AICompanionDefs />
           {children}
           {/* AI Companion — floats globally over all pages */}
           <AICompanion />
