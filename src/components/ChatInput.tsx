@@ -197,14 +197,14 @@ export default function ChatInput() {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask me anything..."
           disabled={isLoading}
-          className="w-full rounded-2xl bg-slate-50 border-2 border-slate-200/90 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/15 dark:bg-zinc-800/90 dark:border-zinc-700 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:bg-zinc-800 dark:focus:border-indigo-400 dark:focus:ring-indigo-500/20 px-5 py-3.5 pr-12 text-sm font-medium transition-all shadow-inner disabled:opacity-50"
+          className="w-full rounded-2xl bg-slate-100 focus:bg-white text-slate-900 placeholder:text-slate-500 border-2 border-slate-300 focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 dark:bg-zinc-800 dark:focus:bg-zinc-800 dark:text-white dark:placeholder:text-zinc-400 dark:border-zinc-700 dark:focus:border-indigo-500 dark:focus:ring-indigo-500/30 px-5 py-3.5 pr-12 text-sm sm:text-base font-medium transition-all shadow-xs disabled:opacity-50"
         />
         <motion.button
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.92 }}
           type="submit"
           disabled={isLoading || !input.trim()}
-          className="absolute right-2 flex items-center justify-center w-8 h-8 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors shadow-md shadow-indigo-600/30 cursor-pointer"
+          className="absolute right-2 flex items-center justify-center w-8 h-8 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400 disabled:opacity-35 disabled:cursor-not-allowed transition-all shadow-md shadow-indigo-600/30 cursor-pointer"
         >
           {isLoading ? (
             <Loader2 className="w-4 h-4 animate-spin text-white" />
