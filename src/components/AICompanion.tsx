@@ -391,7 +391,7 @@ function AICompanion() {
               className="absolute inset-[-12px] sm:inset-[-15px] rounded-full pointer-events-none"
               style={{
                 background:
-                  'radial-gradient(circle, rgba(37,99,235,0.3) 0%, rgba(56,189,248,0.18) 42%, rgba(99,102,241,0.1) 65%, transparent 85%)',
+                  'radial-gradient(circle, rgba(99,102,241,0.25) 0%, rgba(56,189,248,0.18) 42%, rgba(168,85,247,0.12) 65%, transparent 85%)',
                 filter: 'blur(18px)',
               }}
               animate={{
@@ -429,10 +429,10 @@ function AICompanion() {
               <svg viewBox="0 0 180 180" className="w-full h-full" fill="none">
                 <defs>
                   <linearGradient id="counterFluidLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#1e1b4b" stopOpacity="0.85" />
-                    <stop offset="45%" stopColor="#4338ca" stopOpacity="0.8" />
-                    <stop offset="80%" stopColor="#2563eb" stopOpacity="0.4" />
-                    <stop offset="100%" stopColor="#1e1b4b" stopOpacity="0.1" />
+                    <stop offset="0%" stopColor="#818cf8" stopOpacity="0.9" />
+                    <stop offset="45%" stopColor="#38bdf8" stopOpacity="0.85" />
+                    <stop offset="80%" stopColor="#6366f1" stopOpacity="0.5" />
+                    <stop offset="100%" stopColor="#a855f7" stopOpacity="0.2" />
                   </linearGradient>
 
                   <linearGradient id="counterFluidDark" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -449,7 +449,7 @@ function AICompanion() {
                   className="
                     stroke-[url(#counterFluidLight)] dark:stroke-[url(#counterFluidDark)]
                     stroke-[3.5]
-                    drop-shadow-[0_0_8px_rgba(67,56,202,0.35)]
+                    drop-shadow-[0_0_8px_rgba(99,102,241,0.35)]
                     dark:drop-shadow-[0_0_12px_rgba(129,140,248,0.6)]
                   "
                   strokeLinecap="round"
@@ -462,8 +462,8 @@ function AICompanion() {
                   key={i}
                   className="
                     absolute w-2 h-2 rounded-full
-                    bg-indigo-600 dark:bg-indigo-300
-                    shadow-[0_0_6px_1.5px_#4338ca]
+                    bg-gradient-to-tr from-indigo-500 to-cyan-400 dark:bg-indigo-300
+                    shadow-[0_0_6px_1.5px_rgba(99,102,241,0.5)]
                     dark:shadow-[0_0_8px_2px_#818cf8]
                   "
                   style={{
@@ -490,10 +490,10 @@ function AICompanion() {
               rounded-full
               flex items-center justify-center
               overflow-hidden
-              border-2 border-slate-900/85 dark:border-cyan-400/85
-              bg-gradient-to-b from-slate-900/[0.12] via-blue-950/[0.22] to-slate-950/[0.42]
+              border-2 border-indigo-400/90 dark:border-cyan-400/85
+              bg-gradient-to-b from-white/95 via-sky-50/80 to-indigo-100/90
               dark:bg-gradient-to-b dark:from-slate-900/70 dark:via-blue-950/80 dark:to-cyan-950/90
-              shadow-[0_12px_28px_rgba(15,23,42,0.35),inset_0_-8px_18px_rgba(15,23,42,0.45),inset_0_3px_10px_rgba(255,255,255,0.7)]
+              shadow-[0_12px_28px_rgba(99,102,241,0.25),0_4px_12px_rgba(56,189,248,0.2),inset_0_-6px_16px_rgba(99,102,241,0.2),inset_0_3px_12px_rgba(255,255,255,0.95)]
               dark:shadow-[0_0_26px_rgba(34,211,238,0.5),inset_0_-8px_20px_rgba(0,0,0,0.7),inset_0_3px_10px_rgba(34,211,238,0.6)]
               backdrop-blur-xl
             ">
@@ -502,9 +502,9 @@ function AICompanion() {
               <motion.div
                 className="
                   absolute w-9 h-9 sm:w-11 sm:h-11 rounded-full
-                  bg-gradient-to-tr from-blue-700 via-indigo-600 to-cyan-400
+                  bg-gradient-to-tr from-indigo-600 via-blue-500 to-cyan-300
                   dark:from-cyan-400 dark:via-sky-400 dark:to-indigo-500
-                  shadow-[0_0_20px_rgba(37,99,235,0.85)]
+                  shadow-[0_0_22px_rgba(79,70,229,0.7),0_0_10px_rgba(56,189,248,0.8)]
                   dark:shadow-[0_0_26px_rgba(34,211,238,0.9)]
                 "
                 animate={{
@@ -532,7 +532,7 @@ function AICompanion() {
                   absolute top-1 left-1.5 sm:top-1.5 sm:left-2
                   w-[60%] h-[38%]
                   rounded-full
-                  bg-gradient-to-b from-white/80 via-white/20 to-transparent
+                  bg-gradient-to-b from-white/90 via-white/40 to-transparent
                   blur-[0.5px]
                   pointer-events-none
                 "
@@ -544,7 +544,7 @@ function AICompanion() {
                 absolute bottom-1 right-1.5
                 w-[48%] h-[24%]
                 rounded-full
-                bg-cyan-400/30 dark:bg-cyan-300/40
+                bg-cyan-400/40 dark:bg-cyan-300/40
                 blur-[4px]
                 pointer-events-none
               " />
@@ -566,10 +566,10 @@ function AICompanion() {
                 <defs>
                   {/* Fluid Stream Gradient Light Mode */}
                   <linearGradient id="fluidStreamLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#0f172a" stopOpacity="0.9" />
+                    <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.95" />
                     <stop offset="35%" stopColor="#2563eb" stopOpacity="0.95" />
-                    <stop offset="70%" stopColor="#38bdf8" stopOpacity="0.95" />
-                    <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.8" />
+                    <stop offset="70%" stopColor="#06b6d4" stopOpacity="0.95" />
+                    <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.85" />
                   </linearGradient>
 
                   {/* Fluid Stream Gradient Dark Mode */}
@@ -594,7 +594,7 @@ function AICompanion() {
                   className="
                     stroke-[url(#fluidStreamLight)] dark:stroke-[url(#fluidStreamDark)]
                     stroke-[5]
-                    drop-shadow-[0_0_10px_rgba(37,99,235,0.45)]
+                    drop-shadow-[0_0_12px_rgba(99,102,241,0.45)]
                     dark:drop-shadow-[0_0_16px_rgba(34,211,238,0.75)]
                   "
                   strokeLinecap="round"
