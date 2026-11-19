@@ -75,8 +75,8 @@ export default function LeftSidebar({ onToggle }: LeftSidebarProps) {
         border-r border-slate-200 dark:border-zinc-800
         shadow-[2px_0_24px_rgba(79,70,229,0.07)] dark:shadow-[2px_0_24px_rgba(0,0,0,0.5)]
         transition-colors duration-300
+        overflow-visible
       `}
-      style={{ overflow: 'hidden' }}
     >
       {/* ── Brand / Logo Row ── */}
       <div className="flex items-center gap-2.5 px-3 pt-5 pb-4 min-h-[72px] shrink-0">
@@ -220,27 +220,27 @@ export default function LeftSidebar({ onToggle }: LeftSidebarProps) {
 
       {/* ── Collapse Toggle Button ── */}
       <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.92 }}
+        whileHover={{ scale: 1.12 }}
+        whileTap={{ scale: 0.9 }}
         onClick={() => handleToggle()}
         aria-label={expanded ? 'Collapse sidebar' : 'Expand sidebar'}
-        title={expanded ? 'Collapse' : 'Expand'}
+        title={expanded ? 'Collapse sidebar' : 'Expand sidebar'}
         className="
-          absolute -right-3 top-[72px]
-          w-6 h-6 rounded-full
-          bg-white dark:bg-zinc-900
-          border border-slate-200 dark:border-zinc-700
-          shadow-sm
+          absolute -right-4 top-20
+          w-8 h-8 rounded-full
+          bg-gradient-to-br from-indigo-600 to-violet-600
+          shadow-[0_0_12px_rgba(99,102,241,0.6)]
+          border-2 border-white dark:border-zinc-950
           flex items-center justify-center
-          text-slate-500 dark:text-zinc-400
-          hover:text-indigo-600 dark:hover:text-indigo-400
-          hover:border-indigo-300 dark:hover:border-indigo-500/60
-          transition-colors duration-200 cursor-pointer z-50
+          text-white
+          hover:from-indigo-500 hover:to-violet-500
+          hover:shadow-[0_0_18px_rgba(99,102,241,0.75)]
+          transition-all duration-200 cursor-pointer z-50
         "
       >
         {expanded
-          ? <ChevronLeft  className="w-3 h-3" />
-          : <ChevronRight className="w-3 h-3" />
+          ? <ChevronLeft  className="w-4 h-4" />
+          : <ChevronRight className="w-4 h-4" />
         }
       </motion.button>
     </motion.aside>
