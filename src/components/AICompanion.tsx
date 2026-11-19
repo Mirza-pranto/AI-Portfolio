@@ -382,6 +382,7 @@ function AICompanion() {
           {/* ══════════════ Compact 3D Circular Cyber-Sphere + Fluid Aura ══════════════ */}
           <motion.div
             className="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center"
+            style={{ perspective: 850, transformStyle: 'preserve-3d' }}
             animate={{ rotate: spinTrigger * 360 }}
             transition={{ type: 'spring', stiffness: 50, damping: 10, mass: 1.2 }}
           >
@@ -414,8 +415,9 @@ function AICompanion() {
               }}
             />
 
-            {/* ── Layer 2: Secondary Counter-Flowing Fluid Ribbon (Background Depth Stream) ── */}
+            {/* ── Layer 2: Secondary Counter-Flowing Precision Gyroscope Lines (Background Depth System) ── */}
             <motion.div
+              style={{ transformStyle: 'preserve-3d', transform: 'translateZ(-14px)' }}
               className="absolute inset-[-10px] sm:inset-[-13px] pointer-events-none z-0"
               animate={{
                 rotate: isGenerating ? [360, 0] : [360, 0],
@@ -429,46 +431,69 @@ function AICompanion() {
               <svg viewBox="0 0 180 180" className="w-full h-full" fill="none">
                 <defs>
                   <linearGradient id="counterFluidLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#818cf8" stopOpacity="0.9" />
-                    <stop offset="45%" stopColor="#38bdf8" stopOpacity="0.85" />
-                    <stop offset="80%" stopColor="#6366f1" stopOpacity="0.5" />
-                    <stop offset="100%" stopColor="#a855f7" stopOpacity="0.2" />
+                    <stop offset="0%" stopColor="#818cf8" stopOpacity="0.95" />
+                    <stop offset="35%" stopColor="#38bdf8" stopOpacity="0.9" />
+                    <stop offset="70%" stopColor="#6366f1" stopOpacity="0.8" />
+                    <stop offset="100%" stopColor="#a855f7" stopOpacity="0.3" />
                   </linearGradient>
 
                   <linearGradient id="counterFluidDark" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.85" />
-                    <stop offset="45%" stopColor="#6366f1" stopOpacity="0.8" />
-                    <stop offset="80%" stopColor="#9333ea" stopOpacity="0.5" />
-                    <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.15" />
+                    <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.9" />
+                    <stop offset="40%" stopColor="#6366f1" stopOpacity="0.85" />
+                    <stop offset="75%" stopColor="#9333ea" stopOpacity="0.6" />
+                    <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.25" />
                   </linearGradient>
                 </defs>
 
-                {/* Sweeping Liquid Path 2 */}
+                {/* Track 1: Outer Sweeping Counter-Ellipse */}
                 <path
-                  d="M 134 90 C 134 122, 106 142, 60 140 C 20 138, 10 102, 22 66 C 34 30, 68 14, 108 22 C 132 30, 136 56, 124 76"
+                  d="M 148 90 C 148 126, 118 152, 68 148 C 22 144, 10 106, 24 64 C 38 22, 74 6, 120 14 C 148 20, 154 52, 138 78"
                   className="
                     stroke-[url(#counterFluidLight)] dark:stroke-[url(#counterFluidDark)]
-                    stroke-[3.5]
-                    drop-shadow-[0_0_8px_rgba(99,102,241,0.35)]
-                    dark:drop-shadow-[0_0_10px_rgba(124,58,237,0.35)]
+                    drop-shadow-[0_0_6px_rgba(99,102,241,0.3)]
+                    dark:drop-shadow-[0_0_8px_rgba(124,58,237,0.35)]
                   "
+                  strokeWidth="1.3"
+                  strokeLinecap="round"
+                />
+
+                {/* Track 2: Concentric Inner Counter-Track */}
+                <path
+                  d="M 136 90 C 136 120, 110 140, 72 136 C 34 132, 22 100, 34 68 C 46 36, 76 22, 112 28 C 134 32, 140 56, 128 78"
+                  className="
+                    stroke-[url(#counterFluidLight)] dark:stroke-[url(#counterFluidDark)]
+                    opacity-75
+                  "
+                  strokeWidth="1.0"
+                  strokeLinecap="round"
+                />
+
+                {/* Track 3: Dashed Astrolabe Harmonic Sub-Track */}
+                <path
+                  d="M 142 90 C 142 123, 114 146, 70 142 C 28 138, 16 103, 29 66 C 42 29, 75 14, 116 21 C 141 26, 147 54, 133 78"
+                  className="
+                    stroke-[url(#counterFluidLight)] dark:stroke-[url(#counterFluidDark)]
+                    opacity-50
+                  "
+                  strokeWidth="0.8"
+                  strokeDasharray="2.5 4"
                   strokeLinecap="round"
                 />
               </svg>
 
-              {/* Smaller Orbiting Splash Droplets */}
+              {/* Smaller Orbiting Micro-Nodes */}
               {[40, 160, 275].map((angle, i) => (
                 <motion.div
                   key={i}
                   className="
-                    absolute w-2 h-2 rounded-full
+                    absolute w-1.5 h-1.5 rounded-full
                     bg-gradient-to-tr from-indigo-500 to-cyan-400 dark:bg-indigo-300
-                    shadow-[0_0_6px_1.5px_rgba(99,102,241,0.5)]
-                    dark:shadow-[0_0_6px_1.5px_rgba(129,140,248,0.4)]
+                    shadow-[0_0_5px_1px_rgba(99,102,241,0.5)]
+                    dark:shadow-[0_0_5px_1px_rgba(129,140,248,0.4)]
                   "
                   style={{
-                    left: `calc(50% + ${48 * Math.cos((angle * Math.PI) / 180)}% - 4px)`,
-                    top: `calc(50% + ${48 * Math.sin((angle * Math.PI) / 180)}% - 4px)`,
+                    left: `calc(50% + ${48 * Math.cos((angle * Math.PI) / 180)}% - 3px)`,
+                    top: `calc(50% + ${48 * Math.sin((angle * Math.PI) / 180)}% - 3px)`,
                   }}
                   animate={{
                     opacity: isPageTransitioning ? [0.6, 1, 0.6] : isGenerating ? [0.7, 1, 0.7] : [0.6, 0.92, 0.6],
@@ -484,19 +509,22 @@ function AICompanion() {
             </motion.div>
 
             {/* ── Layer 3: The 3D Glass Sphere (Circular, Tactile, Scaled-Down) ── */}
-            <div className="
-              relative z-10
-              w-[70px] h-[70px] sm:w-[80px] sm:h-[80px]
-              rounded-full
-              flex items-center justify-center
-              overflow-hidden
-              border-2 border-indigo-400/90 dark:border-indigo-500/50
-              bg-gradient-to-b from-white/95 via-sky-50/80 to-indigo-100/90
-              dark:bg-gradient-to-b dark:from-zinc-900/90 dark:via-slate-950/95 dark:to-indigo-950/80
-              shadow-[0_12px_28px_rgba(99,102,241,0.25),0_4px_12px_rgba(56,189,248,0.2),inset_0_-6px_16px_rgba(99,102,241,0.2),inset_0_3px_12px_rgba(255,255,255,0.95)]
-              dark:shadow-[0_0_28px_rgba(99,102,241,0.25),0_0_12px_rgba(139,92,246,0.2),inset_0_-8px_18px_rgba(15,10,30,0.8),inset_0_2px_8px_rgba(165,180,252,0.35)]
-              backdrop-blur-xl
-            ">
+            <div
+              style={{ transform: 'translateZ(0px)', transformStyle: 'preserve-3d' }}
+              className="
+                relative z-10
+                w-[70px] h-[70px] sm:w-[80px] sm:h-[80px]
+                rounded-full
+                flex items-center justify-center
+                overflow-hidden
+                border-2 border-indigo-400/90 dark:border-indigo-500/50
+                bg-gradient-to-b from-white/95 via-sky-50/80 to-indigo-100/90
+                dark:bg-gradient-to-b dark:from-zinc-900/90 dark:via-slate-950/95 dark:to-indigo-950/80
+                shadow-[0_12px_28px_rgba(99,102,241,0.25),0_4px_12px_rgba(56,189,248,0.2),inset_0_-6px_16px_rgba(99,102,241,0.2),inset_0_3px_12px_rgba(255,255,255,0.95)]
+                dark:shadow-[0_0_28px_rgba(99,102,241,0.25),0_0_12px_rgba(139,92,246,0.2),inset_0_-8px_18px_rgba(15,10,30,0.8),inset_0_2px_8px_rgba(165,180,252,0.35)]
+                backdrop-blur-xl
+              "
+            >
 
               {/* ── Internal Plasma Nucleus (Energy Core) ── */}
               <motion.div
@@ -550,103 +578,266 @@ function AICompanion() {
               " />
             </div>
 
-            {/* ── Layer 4: Primary Liquid Ribbon Stream (Foreground Circulating Flow with Droplets) ── */}
-            <motion.div
-              className="absolute inset-[-13px] sm:inset-[-16px] pointer-events-none z-20"
-              animate={{
-                rotate: isGenerating ? [0, 360] : [0, 360],
-              }}
-              transition={{
-                duration: isGenerating ? 2.4 : 10,
-                repeat: Infinity,
-                ease: 'linear',
+            {/* ── Layer 4: 3D Multi-Planar Gyroscopic Rings (Orbiting IN FRONT of the Sphere) ── */}
+            <div
+              className="absolute inset-[-18px] sm:inset-[-22px] pointer-events-none z-20 flex items-center justify-center"
+              style={{
+                perspective: 800,
+                transformStyle: 'preserve-3d',
               }}
             >
-              <svg viewBox="0 0 200 200" className="w-full h-full" fill="none">
-                <defs>
-                  {/* Fluid Stream Gradient Light Mode */}
-                  <linearGradient id="fluidStreamLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.95" />
-                    <stop offset="35%" stopColor="#2563eb" stopOpacity="0.95" />
-                    <stop offset="70%" stopColor="#06b6d4" stopOpacity="0.95" />
-                    <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.85" />
-                  </linearGradient>
-
-                  {/* Fluid Stream Gradient Dark Mode */}
-                  <linearGradient id="fluidStreamDark" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#6366f1" stopOpacity="0.9" />
-                    <stop offset="35%" stopColor="#8b5cf6" stopOpacity="0.95" />
-                    <stop offset="70%" stopColor="#a855f7" stopOpacity="0.85" />
-                    <stop offset="100%" stopColor="#6366f1" stopOpacity="0.75" />
-                  </linearGradient>
-
-                  {/* Liquid Glass Highlight Spine */}
-                  <linearGradient id="fluidSpineGleam" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#ffffff" stopOpacity="0.85" />
-                    <stop offset="50%" stopColor="#ffffff" stopOpacity="0.35" />
-                    <stop offset="100%" stopColor="#ffffff" stopOpacity="0.05" />
-                  </linearGradient>
-                </defs>
-
-                {/* Sweeping Liquid Ribbon Path with Organic Wave Flow */}
-                <path
-                  d="M 32 100 C 32 50, 68 24, 120 28 C 170 32, 180 75, 166 120 C 150 165, 96 178, 56 158 C 34 144, 28 120, 38 100 Z"
-                  className="
-                    stroke-[url(#fluidStreamLight)] dark:stroke-[url(#fluidStreamDark)]
-                    stroke-[5]
-                    drop-shadow-[0_0_12px_rgba(99,102,241,0.45)]
-                    dark:drop-shadow-[0_0_14px_rgba(129,140,248,0.45)]
-                  "
-                  strokeLinecap="round"
-                />
-
-                {/* Inner Specular Highlight Spine (Liquid Glass Glaze) */}
-                <path
-                  d="M 42 100 C 42 60, 74 38, 118 40 C 158 42, 168 80, 154 116 C 140 152, 95 162, 64 148"
-                  stroke="url(#fluidSpineGleam)"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                />
-              </svg>
-
-              {/* Orbiting Liquid Droplet Beads */}
-              {[0, 85, 180, 270].map((angle, i) => (
+              {/* 3D Ring 1: Equatorial Front-Tilt Orbit (Passes across the front-lower face of the sphere) */}
+              <div
+                className="absolute w-full h-full flex items-center justify-center"
+                style={{
+                  transformStyle: 'preserve-3d',
+                  transform: 'rotateX(68deg) rotateY(-18deg) translateZ(12px)',
+                }}
+              >
                 <motion.div
-                  key={i}
-                  className="
-                    absolute w-3 h-3 rounded-full
-                    bg-gradient-to-tr from-blue-700 via-cyan-400 to-white
-                    dark:from-indigo-400 dark:via-violet-300 dark:to-white
-                    shadow-[0_0_10px_2.5px_#2563eb]
-                    dark:shadow-[0_0_10px_2px_rgba(139,92,246,0.55)]
-                  "
-                  style={{
-                    left: `calc(50% + ${48 * Math.cos((angle * Math.PI) / 180)}% - 6px)`,
-                    top: `calc(50% + ${48 * Math.sin((angle * Math.PI) / 180)}% - 6px)`,
-                  }}
-                  animate={{
-                    scale: isPageTransitioning
-                      ? [0.85, 1.4, 0.85]
-                      : isGenerating
-                      ? [0.85, 1.4, 0.85]
-                      : [0.85, 1.25, 0.85],
-                    opacity: isPageTransitioning
-                      ? [0.65, 1, 0.65]
-                      : isGenerating
-                      ? [0.65, 1, 0.65]
-                      : [0.65, 0.92, 0.65],
-                  }}
+                  className="w-full h-full"
+                  animate={{ rotateZ: isGenerating ? [0, 360] : [0, 360] }}
                   transition={{
-                    duration: isPageTransitioning ? 1.4 : isGenerating ? 0.5 : 2.4,
-                    repeat: isPageTransitioning ? 0 : Infinity,
-                    ease: 'easeInOut',
+                    duration: isGenerating ? 2.4 : 9.5,
+                    repeat: Infinity,
+                    ease: 'linear',
                   }}
                 >
-                  {/* Droplet Highlight Glint */}
-                  <div className="absolute top-[18%] left-[20%] w-[32%] h-[32%] rounded-full bg-white/90 blur-[0.3px]" />
+                  <svg viewBox="0 0 200 200" className="w-full h-full" fill="none">
+                    <defs>
+                      <linearGradient id="ringGradientPrimaryLight" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.95" />
+                        <stop offset="30%" stopColor="#2563eb" stopOpacity="0.95" />
+                        <stop offset="65%" stopColor="#06b6d4" stopOpacity="0.95" />
+                        <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.9" />
+                      </linearGradient>
+
+                      <linearGradient id="ringGradientPrimaryDark" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#6366f1" stopOpacity="0.9" />
+                        <stop offset="35%" stopColor="#8b5cf6" stopOpacity="0.95" />
+                        <stop offset="70%" stopColor="#a855f7" stopOpacity="0.85" />
+                        <stop offset="100%" stopColor="#6366f1" stopOpacity="0.75" />
+                      </linearGradient>
+
+                      <linearGradient id="ringSpineGleam" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                        <stop offset="50%" stopColor="#ffffff" stopOpacity="0.4" />
+                        <stop offset="100%" stopColor="#ffffff" stopOpacity="0.05" />
+                      </linearGradient>
+                    </defs>
+
+                    {/* Outer Equatorial Orbit Ring */}
+                    <circle
+                      cx="100" cy="100" r="74"
+                      className="
+                        stroke-[url(#ringGradientPrimaryLight)] dark:stroke-[url(#ringGradientPrimaryDark)]
+                        drop-shadow-[0_0_8px_rgba(99,102,241,0.4)]
+                        dark:drop-shadow-[0_0_10px_rgba(129,140,248,0.45)]
+                      "
+                      strokeWidth="1.4"
+                    />
+
+                    {/* Parallel Concentric Orbit Ring */}
+                    <circle
+                      cx="100" cy="100" r="66"
+                      className="
+                        stroke-[url(#ringGradientPrimaryLight)] dark:stroke-[url(#ringGradientPrimaryDark)]
+                        opacity-80
+                      "
+                      strokeWidth="1.0"
+                    />
+
+                    {/* Dashed Chronometer Ring */}
+                    <circle
+                      cx="100" cy="100" r="70"
+                      className="
+                        stroke-[url(#ringGradientPrimaryLight)] dark:stroke-[url(#ringGradientPrimaryDark)]
+                        opacity-60
+                      "
+                      strokeWidth="0.8"
+                      strokeDasharray="3 5"
+                    />
+
+                    {/* Specular Front Curvature Highlight Spine */}
+                    <path
+                      d="M 38 126 C 65 158, 135 158, 162 126"
+                      stroke="url(#ringSpineGleam)"
+                      strokeWidth="1.0"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+
+                  {/* Satellite Beads Orbiting on Front Plane */}
+                  {[0, 120, 240].map((angle, i) => (
+                    <motion.div
+                      key={i}
+                      className="
+                        absolute w-2 h-2 rounded-full
+                        bg-gradient-to-tr from-blue-600 via-indigo-500 to-white
+                        dark:from-indigo-400 dark:via-violet-300 dark:to-white
+                        shadow-[0_0_8px_1.5px_rgba(37,99,235,0.7)]
+                        dark:shadow-[0_0_8px_1.5px_rgba(139,92,246,0.6)]
+                      "
+                      style={{
+                        left: `calc(50% + ${37 * Math.cos((angle * Math.PI) / 180)}% - 4px)`,
+                        top: `calc(50% + ${37 * Math.sin((angle * Math.PI) / 180)}% - 4px)`,
+                      }}
+                      animate={{
+                        scale: isPageTransitioning ? [0.85, 1.4, 0.85] : isGenerating ? [0.85, 1.4, 0.85] : [0.85, 1.25, 0.85],
+                        opacity: isPageTransitioning ? [0.65, 1, 0.65] : isGenerating ? [0.65, 1, 0.65] : [0.65, 0.92, 0.65],
+                      }}
+                      transition={{
+                        duration: isPageTransitioning ? 1.4 : isGenerating ? 0.5 : 2.4,
+                        repeat: isPageTransitioning ? 0 : Infinity,
+                        ease: 'easeInOut',
+                      }}
+                    >
+                      <div className="absolute top-[18%] left-[20%] w-[32%] h-[32%] rounded-full bg-white/90 blur-[0.3px]" />
+                    </motion.div>
+                  ))}
                 </motion.div>
-              ))}
-            </motion.div>
+              </div>
+
+              {/* 3D Ring 2: Diagonal Cross-Tilt Orbit (Sweeps diagonally in front across the sphere face) */}
+              <div
+                className="absolute w-full h-full flex items-center justify-center"
+                style={{
+                  transformStyle: 'preserve-3d',
+                  transform: 'rotateX(-58deg) rotateY(38deg) translateZ(8px)',
+                }}
+              >
+                <motion.div
+                  className="w-full h-full"
+                  animate={{ rotateZ: isGenerating ? [360, 0] : [360, 0] }}
+                  transition={{
+                    duration: isGenerating ? 3.0 : 12.5,
+                    repeat: Infinity,
+                    ease: 'linear',
+                  }}
+                >
+                  <svg viewBox="0 0 200 200" className="w-full h-full" fill="none">
+                    <defs>
+                      <linearGradient id="ringGradientSecondaryLight" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#818cf8" stopOpacity="0.95" />
+                        <stop offset="35%" stopColor="#38bdf8" stopOpacity="0.9" />
+                        <stop offset="70%" stopColor="#6366f1" stopOpacity="0.8" />
+                        <stop offset="100%" stopColor="#a855f7" stopOpacity="0.4" />
+                      </linearGradient>
+
+                      <linearGradient id="ringGradientSecondaryDark" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.9" />
+                        <stop offset="40%" stopColor="#6366f1" stopOpacity="0.85" />
+                        <stop offset="75%" stopColor="#9333ea" stopOpacity="0.6" />
+                        <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.3" />
+                      </linearGradient>
+                    </defs>
+
+                    {/* Outer Diagonal Ring */}
+                    <circle
+                      cx="100" cy="100" r="78"
+                      className="
+                        stroke-[url(#ringGradientSecondaryLight)] dark:stroke-[url(#ringGradientSecondaryDark)]
+                        drop-shadow-[0_0_6px_rgba(99,102,241,0.35)]
+                        dark:drop-shadow-[0_0_8px_rgba(124,58,237,0.35)]
+                      "
+                      strokeWidth="1.3"
+                    />
+
+                    {/* Inner Diagonal Ring */}
+                    <circle
+                      cx="100" cy="100" r="62"
+                      className="
+                        stroke-[url(#ringGradientSecondaryLight)] dark:stroke-[url(#ringGradientSecondaryDark)]
+                        opacity-70
+                      "
+                      strokeWidth="0.9"
+                    />
+
+                    {/* Dashed Diagonal Ring */}
+                    <circle
+                      cx="100" cy="100" r="70"
+                      className="
+                        stroke-[url(#ringGradientSecondaryLight)] dark:stroke-[url(#ringGradientSecondaryDark)]
+                        opacity-50
+                      "
+                      strokeWidth="0.8"
+                      strokeDasharray="2.5 4"
+                    />
+                  </svg>
+
+                  {/* Satellite Beads Orbiting on Diagonal Plane */}
+                  {[60, 180, 300].map((angle, i) => (
+                    <motion.div
+                      key={i}
+                      className="
+                        absolute w-1.5 h-1.5 rounded-full
+                        bg-gradient-to-tr from-indigo-500 to-cyan-400 dark:bg-indigo-300
+                        shadow-[0_0_6px_1px_rgba(99,102,241,0.5)]
+                        dark:shadow-[0_0_6px_1px_rgba(129,140,248,0.4)]
+                      "
+                      style={{
+                        left: `calc(50% + ${39 * Math.cos((angle * Math.PI) / 180)}% - 3px)`,
+                        top: `calc(50% + ${39 * Math.sin((angle * Math.PI) / 180)}% - 3px)`,
+                      }}
+                      animate={{
+                        scale: isPageTransitioning ? [0.85, 1.4, 0.85] : isGenerating ? [0.85, 1.4, 0.85] : [0.85, 1.25, 0.85],
+                        opacity: isPageTransitioning ? [0.65, 1, 0.65] : isGenerating ? [0.65, 1, 0.65] : [0.65, 0.92, 0.65],
+                      }}
+                      transition={{
+                        duration: isPageTransitioning ? 1.4 : isGenerating ? 0.5 : 2.4,
+                        repeat: isPageTransitioning ? 0 : Infinity,
+                        ease: 'easeInOut',
+                      }}
+                    />
+                  ))}
+                </motion.div>
+              </div>
+
+              {/* 3D Ring 3: Steep Polar Latitude Arc (Third 3D Gyroscopic Axis) */}
+              <div
+                className="absolute w-full h-full flex items-center justify-center"
+                style={{
+                  transformStyle: 'preserve-3d',
+                  transform: 'rotateX(82deg) rotateY(42deg) translateZ(6px)',
+                }}
+              >
+                <motion.div
+                  className="w-full h-full"
+                  animate={{ rotateZ: isGenerating ? [0, 360] : [0, 360] }}
+                  transition={{
+                    duration: isGenerating ? 4.2 : 16,
+                    repeat: Infinity,
+                    ease: 'linear',
+                  }}
+                >
+                  <svg viewBox="0 0 200 200" className="w-full h-full" fill="none">
+                    <circle
+                      cx="100" cy="100" r="82"
+                      className="
+                        stroke-[url(#ringGradientPrimaryLight)] dark:stroke-[url(#ringGradientPrimaryDark)]
+                        opacity-60
+                        drop-shadow-[0_0_5px_rgba(99,102,241,0.25)]
+                      "
+                      strokeWidth="0.9"
+                      strokeDasharray="4 6"
+                    />
+                  </svg>
+
+                  <div
+                    className="
+                      absolute w-1.5 h-1.5 rounded-full
+                      bg-white dark:bg-violet-200
+                      shadow-[0_0_6px_1.5px_rgba(255,255,255,0.8)]
+                      dark:shadow-[0_0_6px_1.5px_rgba(168,85,247,0.8)]
+                    "
+                    style={{
+                      left: `calc(50% + ${41 * Math.cos((45 * Math.PI) / 180)}% - 3px)`,
+                      top: `calc(50% + ${41 * Math.sin((45 * Math.PI) / 180)}% - 3px)`,
+                    }}
+                  />
+                </motion.div>
+              </div>
+            </div>
 
           </motion.div>
         </motion.div>
