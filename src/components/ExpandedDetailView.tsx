@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, Globe, Sparkles, ArrowUpRight, FolderGit2, ArrowRight } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import { usePortfolioStore } from '@/lib/store';
 import { portfolioData } from '@/lib/data';
 
@@ -234,7 +235,7 @@ export default function ExpandedDetailView() {
                           whileHover={{ y: -3 }}
                           whileTap={{ scale: 0.98 }}
                           onClick={() => handleProjectSelect(proj.id)}
-                          className="group p-5 rounded-2xl bg-slate-50 dark:bg-zinc-850 border-2 border-slate-200 dark:border-zinc-800 hover:border-indigo-400 dark:hover:border-indigo-600 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
+                          className="group p-5 rounded-2xl bg-slate-50 dark:bg-zinc-800 border-2 border-slate-200 dark:border-zinc-800 hover:border-indigo-400 dark:hover:border-indigo-600 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
                         >
                           <div>
                             <div className="flex items-center justify-between gap-2 mb-2">
@@ -287,7 +288,7 @@ export default function ExpandedDetailView() {
                 )}
               </div>
             ) : (
-              /* --- STANDARD EXPANDED VIEW: Render Tags & Long Description --- */
+              /* --- STANDARD EXPANDED VIEW: Render Tags & Markdown Description --- */
               <>
                 {/* Technology / Tag pills */}
                 {item.tags && item.tags.length > 0 && (
@@ -303,72 +304,85 @@ export default function ExpandedDetailView() {
                   </div>
                 )}
 
-                {/* Detailed Description with markdown-style section headings & bold highlights */}
-                <div className="text-zinc-600 dark:text-zinc-300 leading-relaxed text-base sm:text-lg mb-8 max-w-3xl space-y-4">
-                  {(item.longDescription || item.description || '')
-                    .split('\n\n')
-                    .map((paragraph: string, idx: number) => {
-                      const trimmed = paragraph.trim();
-                      if (!trimmed) return null;
-
-                      // Handle bold section headings like **Overview** or **Key Features**
-                      if (trimmed.startsWith('**') && trimmed.endsWith('**') && !trimmed.includes('\n')) {
-                        const headingText = trimmed.slice(2, -2);
-                        return (
-                          <h4
-                            key={idx}
-                            className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-white pt-2 first:pt-0"
-                          >
-                            {headingText}
-                          </h4>
-                        );
-                      }
-
-                      // Handle bullet lists
-                      if (trimmed.includes('\n- ') || trimmed.startsWith('- ') || trimmed.startsWith('• ')) {
-                        const lines = trimmed.split('\n');
-                        return (
-                          <ul key={idx} className="space-y-2 pl-1 my-2">
-                            {lines.map((line: string, lineIdx: number) => {
-                              const cleanLine = line.replace(/^[-•]\s*/, '').trim();
-                              if (!cleanLine) return null;
-
-                              // Parse **bold** prefixes inside bullets
-                              const boldMatch = cleanLine.match(/^\*\*([^*]+)\*\*:(.*)$/);
-                              if (boldMatch) {
-                                return (
-                                  <li key={lineIdx} className="flex items-start gap-2.5 text-sm sm:text-base">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-2 flex-shrink-0" />
-                                    <div>
-                                      <strong className="font-semibold text-zinc-900 dark:text-white">
-                                        {boldMatch[1]}:
-                                      </strong>
-                                      <span className="text-zinc-600 dark:text-zinc-300 ml-1">
-                                        {boldMatch[2]}
-                                      </span>
-                                    </div>
-                                  </li>
-                                );
-                              }
-
-                              return (
-                                <li key={lineIdx} className="flex items-start gap-2.5 text-sm sm:text-base">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-2 flex-shrink-0" />
-                                  <span className="text-zinc-600 dark:text-zinc-300">{cleanLine}</span>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        );
-                      }
-
-                      // Standard paragraph text
-                      return (
-                        <p key={idx} className="text-sm sm:text-base leading-relaxed text-zinc-600 dark:text-zinc-300">
-                          {trimmed}
+                {/* Markdown Parsed Description using react-markdown with custom Tailwind components */}
+                <div className="text-slate-700 dark:text-zinc-300 leading-relaxed text-base sm:text-lg mb-8 max-w-3xl">
+                  <ReactMarkdown
+                    components={{
+                      h1: ({ children }) => (
+                        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mt-6 mb-3 first:mt-0">
+                          {children}
+                        </h1>
+                      ),
+                      h2: ({ children }) => (
+                        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-6 mb-3 first:mt-0">
+                          {children}
+                        </h2>
+                      ),
+                      h3: ({ children }) => (
+                        <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mt-5 mb-2 first:mt-0">
+                          {children}
+                        </h3>
+                      ),
+                      h4: ({ children }) => (
+                        <h4 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mt-4 mb-2 first:mt-0">
+                          {children}
+                        </h4>
+                      ),
+                      p: ({ children }) => (
+                        <p className="mb-4 leading-relaxed text-slate-700 dark:text-zinc-300 last:mb-0">
+                          {children}
                         </p>
-                      );
-                    })}
+                      ),
+                      strong: ({ children }) => (
+                        <strong className="font-bold text-slate-900 dark:text-white">
+                          {children}
+                        </strong>
+                      ),
+                      em: ({ children }) => (
+                        <em className="italic text-slate-700 dark:text-zinc-300">
+                          {children}
+                        </em>
+                      ),
+                      ul: ({ children }) => (
+                        <ul className="my-4 space-y-2.5 list-none pl-0">
+                          {children}
+                        </ul>
+                      ),
+                      ol: ({ children }) => (
+                        <ol className="my-4 space-y-2 list-decimal pl-5 text-slate-700 dark:text-zinc-300">
+                          {children}
+                        </ol>
+                      ),
+                      li: ({ children }) => (
+                        <li className="flex items-start gap-2.5 text-sm sm:text-base leading-relaxed text-slate-700 dark:text-zinc-300">
+                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-2.5 flex-shrink-0" />
+                          <span className="flex-1">{children}</span>
+                        </li>
+                      ),
+                      code: ({ children }) => (
+                        <code className="px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 text-indigo-600 dark:text-indigo-400 text-sm font-mono">
+                          {children}
+                        </code>
+                      ),
+                      a: ({ href, children }) => (
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-indigo-600 dark:text-indigo-400 underline hover:text-indigo-700 dark:hover:text-indigo-300"
+                        >
+                          {children}
+                        </a>
+                      ),
+                      blockquote: ({ children }) => (
+                        <blockquote className="border-l-4 border-indigo-500 pl-4 py-1 italic my-4 text-slate-600 dark:text-zinc-400">
+                          {children}
+                        </blockquote>
+                      ),
+                    }}
+                  >
+                    {item.longDescription || item.description || ''}
+                  </ReactMarkdown>
                 </div>
               </>
             )}
