@@ -60,6 +60,36 @@ function getRandomFrom<T>(arr: T[]): T {
 }
 
 /* ═════════════════════════════════════════════════
+   Static Satellite Coordinates (Hydration-Safe)
+   ═════════════════════════════════════════════════ */
+
+const LAYER2_NODES = [
+  { left: '86.77%', top: '80.85%' },
+  { left: '4.89%',  top: '66.42%' },
+  { left: '54.18%', top: '2.18%' },
+];
+
+const RING1_BEADS = [
+  { left: '87%', top: '50%' },
+  { left: '13%', top: '50%' },
+];
+
+const RING2_BEADS = [
+  { left: '69.25%', top: '83.34%' },
+  { left: '30.75%', top: '16.66%' },
+];
+
+const RING3_BEADS = [
+  { left: '30%',    top: '84.64%' },
+  { left: '70%',    top: '15.36%' },
+];
+
+const RING4_BEADS = [
+  { left: '50%', top: '91.5%' },
+  { left: '50%', top: '8.5%' },
+];
+
+/* ═════════════════════════════════════════════════
    Thinking Dots Animation
    ═════════════════════════════════════════════════ */
 
@@ -482,18 +512,19 @@ function AICompanion() {
               </svg>
 
               {/* Smaller Orbiting Micro-Nodes */}
-              {[40, 160, 275].map((angle, i) => (
+              {LAYER2_NODES.map((pos, i) => (
                 <motion.div
                   key={i}
+                  suppressHydrationWarning
                   className="
-                    absolute w-1.5 h-1.5 rounded-full
+                    absolute w-1.5 h-1.5 rounded-full -translate-x-1/2 -translate-y-1/2
                     bg-gradient-to-tr from-indigo-500 to-cyan-400 dark:bg-indigo-300
                     shadow-[0_0_5px_1px_rgba(99,102,241,0.5)]
                     dark:shadow-[0_0_5px_1px_rgba(129,140,248,0.4)]
                   "
                   style={{
-                    left: `calc(50% + ${48 * Math.cos((angle * Math.PI) / 180)}% - 3px)`,
-                    top: `calc(50% + ${48 * Math.sin((angle * Math.PI) / 180)}% - 3px)`,
+                    left: pos.left,
+                    top: pos.top,
                   }}
                   animate={{
                     opacity: isPageTransitioning ? [0.6, 1, 0.6] : isGenerating ? [0.7, 1, 0.7] : [0.6, 0.92, 0.6],
@@ -578,25 +609,120 @@ function AICompanion() {
               " />
             </div>
 
-            {/* ── Layer 4: 3D Multi-Planar Gyroscopic Rings (Orbiting IN FRONT of the Sphere) ── */}
+            {/* ── Layer 4: 3D Multi-Planar Gyroscopic Rings (Orbiting IN FRONT of the Sphere across 5 distinct 3D axes) ── */}
             <div
-              className="absolute inset-[-18px] sm:inset-[-22px] pointer-events-none z-20 flex items-center justify-center"
+              className="absolute inset-[-20px] sm:inset-[-26px] pointer-events-none z-20 flex items-center justify-center"
               style={{
-                perspective: 800,
+                perspective: 900,
                 transformStyle: 'preserve-3d',
               }}
             >
-              {/* 3D Ring 1: Equatorial Front-Tilt Orbit (Passes across the front-lower face of the sphere) */}
-              <div
+              {/* Common SVG Definitions for All 3D Rings */}
+              <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
+                <defs>
+                  {/* Primary Equatorial Gradients */}
+                  <linearGradient id="ringEquatorGradLight" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.95" />
+                    <stop offset="30%" stopColor="#2563eb" stopOpacity="0.95" />
+                    <stop offset="65%" stopColor="#06b6d4" stopOpacity="0.95" />
+                    <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.9" />
+                  </linearGradient>
+                  <linearGradient id="ringEquatorGradDark" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#6366f1" stopOpacity="0.9" />
+                    <stop offset="35%" stopColor="#8b5cf6" stopOpacity="0.95" />
+                    <stop offset="70%" stopColor="#a855f7" stopOpacity="0.85" />
+                    <stop offset="100%" stopColor="#6366f1" stopOpacity="0.75" />
+                  </linearGradient>
+
+                  {/* Primary Diagonal Gradients (Ascending) */}
+                  <linearGradient id="ringDiag1GradLight" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#818cf8" stopOpacity="0.95" />
+                    <stop offset="35%" stopColor="#38bdf8" stopOpacity="0.9" />
+                    <stop offset="70%" stopColor="#6366f1" stopOpacity="0.8" />
+                    <stop offset="100%" stopColor="#a855f7" stopOpacity="0.4" />
+                  </linearGradient>
+                  <linearGradient id="ringDiag1GradDark" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.9" />
+                    <stop offset="40%" stopColor="#6366f1" stopOpacity="0.85" />
+                    <stop offset="75%" stopColor="#9333ea" stopOpacity="0.6" />
+                    <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.3" />
+                  </linearGradient>
+
+                  {/* Opposing Diagonal Gradients (Descending) */}
+                  <linearGradient id="ringDiag2GradLight" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#2563eb" stopOpacity="0.95" />
+                    <stop offset="35%" stopColor="#6366f1" stopOpacity="0.9" />
+                    <stop offset="70%" stopColor="#8b5cf6" stopOpacity="0.8" />
+                    <stop offset="100%" stopColor="#0ea5e9" stopOpacity="0.4" />
+                  </linearGradient>
+                  <linearGradient id="ringDiag2GradDark" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.9" />
+                    <stop offset="40%" stopColor="#6366f1" stopOpacity="0.85" />
+                    <stop offset="75%" stopColor="#a855f7" stopOpacity="0.65" />
+                    <stop offset="100%" stopColor="#4338ca" stopOpacity="0.35" />
+                  </linearGradient>
+
+                  {/* Polar Meridian Gradients (Vertical Longitude) */}
+                  <linearGradient id="ringPolarGradLight" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#6366f1" stopOpacity="0.95" />
+                    <stop offset="35%" stopColor="#0ea5e9" stopOpacity="0.9" />
+                    <stop offset="70%" stopColor="#818cf8" stopOpacity="0.8" />
+                    <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.4" />
+                  </linearGradient>
+                  <linearGradient id="ringPolarGradDark" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#a855f7" stopOpacity="0.9" />
+                    <stop offset="35%" stopColor="#818cf8" stopOpacity="0.85" />
+                    <stop offset="70%" stopColor="#6366f1" stopOpacity="0.75" />
+                    <stop offset="100%" stopColor="#9333ea" stopOpacity="0.35" />
+                  </linearGradient>
+
+                  {/* Oblique Precession Gradients */}
+                  <linearGradient id="ringObliqueGradLight" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.9" />
+                    <stop offset="40%" stopColor="#a855f7" stopOpacity="0.85" />
+                    <stop offset="75%" stopColor="#38bdf8" stopOpacity="0.75" />
+                    <stop offset="100%" stopColor="#6366f1" stopOpacity="0.3" />
+                  </linearGradient>
+                  <linearGradient id="ringObliqueGradDark" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#6366f1" stopOpacity="0.85" />
+                    <stop offset="40%" stopColor="#c084fc" stopOpacity="0.85" />
+                    <stop offset="75%" stopColor="#7c3aed" stopOpacity="0.7" />
+                    <stop offset="100%" stopColor="#818cf8" stopOpacity="0.3" />
+                  </linearGradient>
+
+                  {/* Backward-compatibility aliases */}
+                  <linearGradient id="ringGradientPrimaryLight" href="#ringEquatorGradLight" />
+                  <linearGradient id="ringGradientPrimaryDark" href="#ringEquatorGradDark" />
+                  <linearGradient id="ringGradientSecondaryLight" href="#ringDiag1GradLight" />
+                  <linearGradient id="ringGradientSecondaryDark" href="#ringDiag1GradDark" />
+
+                  {/* Specular Front Curvature Spine Highlight */}
+                  <linearGradient id="ringSpineGleam" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                    <stop offset="50%" stopColor="#ffffff" stopOpacity="0.45" />
+                    <stop offset="100%" stopColor="#ffffff" stopOpacity="0.05" />
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              {/* ── 3D Ring 1: Equatorial Front-Tilt Orbit (Horizontal Plane passing across front face) ── */}
+              <motion.div
                 className="absolute w-full h-full flex items-center justify-center"
-                style={{
-                  transformStyle: 'preserve-3d',
-                  transform: 'rotateX(68deg) rotateY(-18deg) translateZ(12px)',
+                style={{ transformStyle: 'preserve-3d' }}
+                animate={{
+                  rotateX: [66, 60, 72, 66],
+                  rotateY: [-12, -4, -18, -12],
+                  z: 14,
+                }}
+                transition={{
+                  duration: 8.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
                 }}
               >
                 <motion.div
                   className="w-full h-full"
-                  animate={{ rotateZ: isGenerating ? [0, 360] : [0, 360] }}
+                  animate={{ rotateZ: [0, 360] }}
                   transition={{
                     duration: isGenerating ? 2.4 : 9.5,
                     repeat: Infinity,
@@ -604,56 +730,28 @@ function AICompanion() {
                   }}
                 >
                   <svg viewBox="0 0 200 200" className="w-full h-full" fill="none">
-                    <defs>
-                      <linearGradient id="ringGradientPrimaryLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.95" />
-                        <stop offset="30%" stopColor="#2563eb" stopOpacity="0.95" />
-                        <stop offset="65%" stopColor="#06b6d4" stopOpacity="0.95" />
-                        <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.9" />
-                      </linearGradient>
-
-                      <linearGradient id="ringGradientPrimaryDark" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#6366f1" stopOpacity="0.9" />
-                        <stop offset="35%" stopColor="#8b5cf6" stopOpacity="0.95" />
-                        <stop offset="70%" stopColor="#a855f7" stopOpacity="0.85" />
-                        <stop offset="100%" stopColor="#6366f1" stopOpacity="0.75" />
-                      </linearGradient>
-
-                      <linearGradient id="ringSpineGleam" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                        <stop offset="50%" stopColor="#ffffff" stopOpacity="0.4" />
-                        <stop offset="100%" stopColor="#ffffff" stopOpacity="0.05" />
-                      </linearGradient>
-                    </defs>
-
-                    {/* Outer Equatorial Orbit Ring */}
+                    {/* Outer Equatorial Orbit Rail */}
                     <circle
                       cx="100" cy="100" r="74"
                       className="
-                        stroke-[url(#ringGradientPrimaryLight)] dark:stroke-[url(#ringGradientPrimaryDark)]
-                        drop-shadow-[0_0_8px_rgba(99,102,241,0.4)]
-                        dark:drop-shadow-[0_0_10px_rgba(129,140,248,0.45)]
+                        stroke-[url(#ringEquatorGradLight)] dark:stroke-[url(#ringEquatorGradDark)]
+                        drop-shadow-[0_0_8px_rgba(99,102,241,0.35)]
+                        dark:drop-shadow-[0_0_9px_rgba(129,140,248,0.4)]
                       "
-                      strokeWidth="1.4"
+                      strokeWidth="1.3"
                     />
 
-                    {/* Parallel Concentric Orbit Ring */}
+                    {/* Concentric Inner Rail */}
                     <circle
                       cx="100" cy="100" r="66"
-                      className="
-                        stroke-[url(#ringGradientPrimaryLight)] dark:stroke-[url(#ringGradientPrimaryDark)]
-                        opacity-80
-                      "
-                      strokeWidth="1.0"
+                      className="stroke-[url(#ringEquatorGradLight)] dark:stroke-[url(#ringEquatorGradDark)] opacity-80"
+                      strokeWidth="0.9"
                     />
 
-                    {/* Dashed Chronometer Ring */}
+                    {/* Micro Dashed Track */}
                     <circle
                       cx="100" cy="100" r="70"
-                      className="
-                        stroke-[url(#ringGradientPrimaryLight)] dark:stroke-[url(#ringGradientPrimaryDark)]
-                        opacity-60
-                      "
+                      className="stroke-[url(#ringEquatorGradLight)] dark:stroke-[url(#ringEquatorGradDark)] opacity-60"
                       strokeWidth="0.8"
                       strokeDasharray="3 5"
                     />
@@ -667,24 +765,25 @@ function AICompanion() {
                     />
                   </svg>
 
-                  {/* Satellite Beads Orbiting on Front Plane */}
-                  {[0, 120, 240].map((angle, i) => (
+                  {/* Satellite Beads Orbiting on Equatorial Plane */}
+                  {RING1_BEADS.map((pos, i) => (
                     <motion.div
                       key={i}
+                      suppressHydrationWarning
                       className="
-                        absolute w-2 h-2 rounded-full
+                        absolute w-2 h-2 rounded-full -translate-x-1/2 -translate-y-1/2
                         bg-gradient-to-tr from-blue-600 via-indigo-500 to-white
                         dark:from-indigo-400 dark:via-violet-300 dark:to-white
                         shadow-[0_0_8px_1.5px_rgba(37,99,235,0.7)]
                         dark:shadow-[0_0_8px_1.5px_rgba(139,92,246,0.6)]
                       "
                       style={{
-                        left: `calc(50% + ${37 * Math.cos((angle * Math.PI) / 180)}% - 4px)`,
-                        top: `calc(50% + ${37 * Math.sin((angle * Math.PI) / 180)}% - 4px)`,
+                        left: pos.left,
+                        top: pos.top,
                       }}
                       animate={{
                         scale: isPageTransitioning ? [0.85, 1.4, 0.85] : isGenerating ? [0.85, 1.4, 0.85] : [0.85, 1.25, 0.85],
-                        opacity: isPageTransitioning ? [0.65, 1, 0.65] : isGenerating ? [0.65, 1, 0.65] : [0.65, 0.92, 0.65],
+                        opacity: isPageTransitioning ? [0.65, 1, 0.65] : isGenerating ? [0.65, 1, 0.65] : [0.65, 0.95, 0.65],
                       }}
                       transition={{
                         duration: isPageTransitioning ? 1.4 : isGenerating ? 0.5 : 2.4,
@@ -692,23 +791,30 @@ function AICompanion() {
                         ease: 'easeInOut',
                       }}
                     >
-                      <div className="absolute top-[18%] left-[20%] w-[32%] h-[32%] rounded-full bg-white/90 blur-[0.3px]" />
+                      <div className="absolute top-[18%] left-[20%] w-[32%] h-[32%] rounded-full bg-white/95 blur-[0.2px]" />
                     </motion.div>
                   ))}
                 </motion.div>
-              </div>
+              </motion.div>
 
-              {/* 3D Ring 2: Diagonal Cross-Tilt Orbit (Sweeps diagonally in front across the sphere face) */}
-              <div
+              {/* ── 3D Ring 2: Ascending Diagonal Orbit (Bottom-Left to Top-Right Tilt) ── */}
+              <motion.div
                 className="absolute w-full h-full flex items-center justify-center"
-                style={{
-                  transformStyle: 'preserve-3d',
-                  transform: 'rotateX(-58deg) rotateY(38deg) translateZ(8px)',
+                style={{ transformStyle: 'preserve-3d' }}
+                animate={{
+                  rotateX: [-54, -46, -60, -54],
+                  rotateY: [42, 50, 34, 42],
+                  z: 11,
+                }}
+                transition={{
+                  duration: 10.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
                 }}
               >
                 <motion.div
                   className="w-full h-full"
-                  animate={{ rotateZ: isGenerating ? [360, 0] : [360, 0] }}
+                  animate={{ rotateZ: [360, 0] }}
                   transition={{
                     duration: isGenerating ? 3.0 : 12.5,
                     repeat: Infinity,
@@ -716,68 +822,47 @@ function AICompanion() {
                   }}
                 >
                   <svg viewBox="0 0 200 200" className="w-full h-full" fill="none">
-                    <defs>
-                      <linearGradient id="ringGradientSecondaryLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#818cf8" stopOpacity="0.95" />
-                        <stop offset="35%" stopColor="#38bdf8" stopOpacity="0.9" />
-                        <stop offset="70%" stopColor="#6366f1" stopOpacity="0.8" />
-                        <stop offset="100%" stopColor="#a855f7" stopOpacity="0.4" />
-                      </linearGradient>
-
-                      <linearGradient id="ringGradientSecondaryDark" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.9" />
-                        <stop offset="40%" stopColor="#6366f1" stopOpacity="0.85" />
-                        <stop offset="75%" stopColor="#9333ea" stopOpacity="0.6" />
-                        <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.3" />
-                      </linearGradient>
-                    </defs>
-
-                    {/* Outer Diagonal Ring */}
+                    {/* Outer Ascending Diagonal Rail */}
                     <circle
-                      cx="100" cy="100" r="78"
+                      cx="100" cy="100" r="77"
                       className="
-                        stroke-[url(#ringGradientSecondaryLight)] dark:stroke-[url(#ringGradientSecondaryDark)]
-                        drop-shadow-[0_0_6px_rgba(99,102,241,0.35)]
+                        stroke-[url(#ringDiag1GradLight)] dark:stroke-[url(#ringDiag1GradDark)]
+                        drop-shadow-[0_0_7px_rgba(56,189,248,0.35)]
                         dark:drop-shadow-[0_0_8px_rgba(124,58,237,0.35)]
                       "
-                      strokeWidth="1.3"
+                      strokeWidth="1.2"
                     />
 
-                    {/* Inner Diagonal Ring */}
+                    {/* Concentric Inner Rail */}
                     <circle
-                      cx="100" cy="100" r="62"
-                      className="
-                        stroke-[url(#ringGradientSecondaryLight)] dark:stroke-[url(#ringGradientSecondaryDark)]
-                        opacity-70
-                      "
-                      strokeWidth="0.9"
+                      cx="100" cy="100" r="63"
+                      className="stroke-[url(#ringDiag1GradLight)] dark:stroke-[url(#ringDiag1GradDark)] opacity-75"
+                      strokeWidth="0.8"
                     />
 
-                    {/* Dashed Diagonal Ring */}
+                    {/* Dashed Sub-Rail */}
                     <circle
                       cx="100" cy="100" r="70"
-                      className="
-                        stroke-[url(#ringGradientSecondaryLight)] dark:stroke-[url(#ringGradientSecondaryDark)]
-                        opacity-50
-                      "
-                      strokeWidth="0.8"
+                      className="stroke-[url(#ringDiag1GradLight)] dark:stroke-[url(#ringDiag1GradDark)] opacity-55"
+                      strokeWidth="0.75"
                       strokeDasharray="2.5 4"
                     />
                   </svg>
 
-                  {/* Satellite Beads Orbiting on Diagonal Plane */}
-                  {[60, 180, 300].map((angle, i) => (
+                  {/* Satellite Beads Orbiting on Ascending Plane */}
+                  {RING2_BEADS.map((pos, i) => (
                     <motion.div
                       key={i}
+                      suppressHydrationWarning
                       className="
-                        absolute w-1.5 h-1.5 rounded-full
+                        absolute w-1.5 h-1.5 rounded-full -translate-x-1/2 -translate-y-1/2
                         bg-gradient-to-tr from-indigo-500 to-cyan-400 dark:bg-indigo-300
                         shadow-[0_0_6px_1px_rgba(99,102,241,0.5)]
                         dark:shadow-[0_0_6px_1px_rgba(129,140,248,0.4)]
                       "
                       style={{
-                        left: `calc(50% + ${39 * Math.cos((angle * Math.PI) / 180)}% - 3px)`,
-                        top: `calc(50% + ${39 * Math.sin((angle * Math.PI) / 180)}% - 3px)`,
+                        left: pos.left,
+                        top: pos.top,
                       }}
                       animate={{
                         scale: isPageTransitioning ? [0.85, 1.4, 0.85] : isGenerating ? [0.85, 1.4, 0.85] : [0.85, 1.25, 0.85],
@@ -791,52 +876,227 @@ function AICompanion() {
                     />
                   ))}
                 </motion.div>
-              </div>
+              </motion.div>
 
-              {/* 3D Ring 3: Steep Polar Latitude Arc (Third 3D Gyroscopic Axis) */}
-              <div
+              {/* ── 3D Ring 3: Opposing Descending Diagonal Orbit (Top-Left to Bottom-Right Cross-Plane) ── */}
+              <motion.div
                 className="absolute w-full h-full flex items-center justify-center"
-                style={{
-                  transformStyle: 'preserve-3d',
-                  transform: 'rotateX(82deg) rotateY(42deg) translateZ(6px)',
+                style={{ transformStyle: 'preserve-3d' }}
+                animate={{
+                  rotateX: [52, 60, 44, 52],
+                  rotateY: [-46, -38, -54, -46],
+                  z: 13,
+                }}
+                transition={{
+                  duration: 11.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
                 }}
               >
                 <motion.div
                   className="w-full h-full"
-                  animate={{ rotateZ: isGenerating ? [0, 360] : [0, 360] }}
+                  animate={{ rotateZ: [0, 360] }}
                   transition={{
-                    duration: isGenerating ? 4.2 : 16,
+                    duration: isGenerating ? 3.4 : 14,
                     repeat: Infinity,
                     ease: 'linear',
                   }}
                 >
                   <svg viewBox="0 0 200 200" className="w-full h-full" fill="none">
+                    {/* Outer Descending Diagonal Rail */}
                     <circle
-                      cx="100" cy="100" r="82"
+                      cx="100" cy="100" r="80"
                       className="
-                        stroke-[url(#ringGradientPrimaryLight)] dark:stroke-[url(#ringGradientPrimaryDark)]
-                        opacity-60
-                        drop-shadow-[0_0_5px_rgba(99,102,241,0.25)]
+                        stroke-[url(#ringDiag2GradLight)] dark:stroke-[url(#ringDiag2GradDark)]
+                        drop-shadow-[0_0_7px_rgba(99,102,241,0.3)]
+                        dark:drop-shadow-[0_0_8px_rgba(168,85,247,0.35)]
                       "
-                      strokeWidth="0.9"
-                      strokeDasharray="4 6"
+                      strokeWidth="1.2"
+                    />
+
+                    {/* Inner Fine Rail */}
+                    <circle
+                      cx="100" cy="100" r="65"
+                      className="stroke-[url(#ringDiag2GradLight)] dark:stroke-[url(#ringDiag2GradDark)] opacity-70"
+                      strokeWidth="0.8"
+                    />
+
+                    {/* Fine Cadence Dots */}
+                    <circle
+                      cx="100" cy="100" r="72"
+                      className="stroke-[url(#ringDiag2GradLight)] dark:stroke-[url(#ringDiag2GradDark)] opacity-55"
+                      strokeWidth="0.75"
+                      strokeDasharray="1.5 3.5"
                     />
                   </svg>
 
+                  {/* Satellite Beads Orbiting on Descending Plane */}
+                  {RING3_BEADS.map((pos, i) => (
+                    <motion.div
+                      key={i}
+                      suppressHydrationWarning
+                      className="
+                        absolute w-1.5 h-1.5 rounded-full -translate-x-1/2 -translate-y-1/2
+                        bg-gradient-to-tr from-sky-400 to-indigo-600 dark:from-purple-300 dark:to-indigo-500
+                        shadow-[0_0_6px_1px_rgba(56,189,248,0.5)]
+                        dark:shadow-[0_0_6px_1px_rgba(168,85,247,0.5)]
+                      "
+                      style={{
+                        left: pos.left,
+                        top: pos.top,
+                      }}
+                      animate={{
+                        scale: isPageTransitioning ? [0.85, 1.4, 0.85] : isGenerating ? [0.85, 1.4, 0.85] : [0.85, 1.25, 0.85],
+                        opacity: isPageTransitioning ? [0.65, 1, 0.65] : isGenerating ? [0.65, 1, 0.65] : [0.65, 0.92, 0.65],
+                      }}
+                      transition={{
+                        duration: isPageTransitioning ? 1.4 : isGenerating ? 0.5 : 2.4,
+                        repeat: isPageTransitioning ? 0 : Infinity,
+                        ease: 'easeInOut',
+                      }}
+                    />
+                  ))}
+                </motion.div>
+              </motion.div>
+
+              {/* ── 3D Ring 4: Polar Meridian Orbit (Vertical North-to-South Longitude Loop) ── */}
+              <motion.div
+                className="absolute w-full h-full flex items-center justify-center"
+                style={{ transformStyle: 'preserve-3d' }}
+                animate={{
+                  rotateX: [16, 24, 8, 16],
+                  rotateY: [82, 88, 76, 82],
+                  z: 9,
+                }}
+                transition={{
+                  duration: 12.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              >
+                <motion.div
+                  className="w-full h-full"
+                  animate={{ rotateZ: [360, 0] }}
+                  transition={{
+                    duration: isGenerating ? 3.8 : 16,
+                    repeat: Infinity,
+                    ease: 'linear',
+                  }}
+                >
+                  <svg viewBox="0 0 200 200" className="w-full h-full" fill="none">
+                    {/* Primary Polar Meridian Rail */}
+                    <circle
+                      cx="100" cy="100" r="83"
+                      className="
+                        stroke-[url(#ringPolarGradLight)] dark:stroke-[url(#ringPolarGradDark)]
+                        opacity-85
+                        drop-shadow-[0_0_7px_rgba(14,165,233,0.3)]
+                        dark:drop-shadow-[0_0_8px_rgba(139,92,246,0.3)]
+                      "
+                      strokeWidth="1.15"
+                    />
+
+                    {/* Concentric Polar Sub-Rail */}
+                    <circle
+                      cx="100" cy="100" r="75"
+                      className="stroke-[url(#ringPolarGradLight)] dark:stroke-[url(#ringPolarGradDark)] opacity-65"
+                      strokeWidth="0.8"
+                    />
+
+                    {/* Dashed Meridian Track */}
+                    <circle
+                      cx="100" cy="100" r="79"
+                      className="stroke-[url(#ringPolarGradLight)] dark:stroke-[url(#ringPolarGradDark)] opacity-55"
+                      strokeWidth="0.75"
+                      strokeDasharray="3 5.5"
+                    />
+                  </svg>
+
+                  {/* Satellite Beads Orbiting on Polar Longitude Plane */}
+                  {RING4_BEADS.map((pos, i) => (
+                    <div
+                      key={i}
+                      suppressHydrationWarning
+                      className="
+                        absolute w-1.5 h-1.5 rounded-full -translate-x-1/2 -translate-y-1/2
+                        bg-white dark:bg-violet-200
+                        shadow-[0_0_6px_1.5px_rgba(255,255,255,0.85)]
+                        dark:shadow-[0_0_6px_1.5px_rgba(168,85,247,0.8)]
+                      "
+                      style={{
+                        left: pos.left,
+                        top: pos.top,
+                      }}
+                    />
+                  ))}
+                </motion.div>
+              </motion.div>
+
+              {/* ── 3D Ring 5: High-Oblique Precessing Orbit (Active 3D Gyroscopic Nutation) ── */}
+              <motion.div
+                className="absolute w-full h-full flex items-center justify-center"
+                style={{ transformStyle: 'preserve-3d' }}
+                animate={{
+                  rotateX: [-32, -18, -44, -32],
+                  rotateY: [-58, -38, -72, -58],
+                  z: 16,
+                }}
+                transition={{
+                  duration: 8.5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              >
+                <motion.div
+                  className="w-full h-full"
+                  animate={{ rotateZ: [0, 360] }}
+                  transition={{
+                    duration: isGenerating ? 4.2 : 18,
+                    repeat: Infinity,
+                    ease: 'linear',
+                  }}
+                >
+                  <svg viewBox="0 0 200 200" className="w-full h-full" fill="none">
+                    {/* Outer Oblique Nutation Rail */}
+                    <circle
+                      cx="100" cy="100" r="87"
+                      className="
+                        stroke-[url(#ringObliqueGradLight)] dark:stroke-[url(#ringObliqueGradDark)]
+                        opacity-80
+                        drop-shadow-[0_0_8px_rgba(99,102,241,0.3)]
+                        dark:drop-shadow-[0_0_9px_rgba(192,132,252,0.35)]
+                      "
+                      strokeWidth="1.1"
+                    />
+
+                    {/* Fine Cadence Ring */}
+                    <circle
+                      cx="100" cy="100" r="82"
+                      className="stroke-[url(#ringObliqueGradLight)] dark:stroke-[url(#ringObliqueGradDark)] opacity-60"
+                      strokeWidth="0.75"
+                      strokeDasharray="2 4"
+                    />
+                  </svg>
+
+                  {/* Luminous Specular Pearl Node on Precession Track */}
                   <div
+                    suppressHydrationWarning
                     className="
-                      absolute w-1.5 h-1.5 rounded-full
-                      bg-white dark:bg-violet-200
-                      shadow-[0_0_6px_1.5px_rgba(255,255,255,0.8)]
-                      dark:shadow-[0_0_6px_1.5px_rgba(168,85,247,0.8)]
+                      absolute w-2 h-2 rounded-full -translate-x-1/2 -translate-y-1/2
+                      bg-gradient-to-tr from-white via-indigo-200 to-indigo-600
+                      dark:from-white dark:via-violet-200 dark:to-violet-600
+                      shadow-[0_0_8px_2px_rgba(99,102,241,0.85)]
+                      dark:shadow-[0_0_8px_2px_rgba(192,132,252,0.8)]
                     "
                     style={{
-                      left: `calc(50% + ${41 * Math.cos((45 * Math.PI) / 180)}% - 3px)`,
-                      top: `calc(50% + ${41 * Math.sin((45 * Math.PI) / 180)}% - 3px)`,
+                      left: '80.76%',
+                      top: '80.76%',
                     }}
-                  />
+                  >
+                    <div className="absolute top-[20%] left-[20%] w-[35%] h-[35%] rounded-full bg-white blur-[0.2px]" />
+                  </div>
                 </motion.div>
-              </div>
+              </motion.div>
             </div>
 
           </motion.div>
