@@ -1,6 +1,11 @@
 export const portfolioData = {
   name: "Mirza Julkawsar" ,
   title: "Software Engineer | AI/NLP/LLM Engineer" ,
+  roles: [
+    "Software Engineer",
+    "AI Engineer",
+    "NLP Researcher",
+  ],
   tagline: "Building end-to-end LLM and RAG systems and turning ideas into working products",
   avatar: "/profile.jpg",
 

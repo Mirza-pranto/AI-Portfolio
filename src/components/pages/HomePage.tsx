@@ -1,10 +1,55 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { portfolioData } from '@/lib/data';
 import ChatMessages from '@/components/ChatMessages';
 
+const ROLES = portfolioData.roles || [
+  'Software Engineer',
+  'AI Engineer',
+  'NLP Researcher',
+];
+
 export default function HomePage() {
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [displayedText, setDisplayedText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentRole = ROLES[roleIndex];
+    let timeout: NodeJS.Timeout;
+
+    if (!isDeleting) {
+      // Typing phase: type next character
+      if (displayedText.length < currentRole.length) {
+        timeout = setTimeout(() => {
+          setDisplayedText(currentRole.slice(0, displayedText.length + 1));
+        }, 70); // Natural typewriter cadence
+      } else {
+        // Completed typing full role: pause for 1 second (1000ms)
+        timeout = setTimeout(() => {
+          setIsDeleting(true);
+        }, 1000);
+      }
+    } else {
+      // Deleting phase: backspace character by character
+      if (displayedText.length > 0) {
+        timeout = setTimeout(() => {
+          setDisplayedText(currentRole.slice(0, displayedText.length - 1));
+        }, 35); // Snappy backspace cadence
+      } else {
+        // Completed deleting: brief pause before typing next role
+        timeout = setTimeout(() => {
+          setIsDeleting(false);
+          setRoleIndex((prev) => (prev + 1) % ROLES.length);
+        }, 250);
+      }
+    }
+
+    return () => clearTimeout(timeout);
+  }, [displayedText, isDeleting, roleIndex]);
+
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6">
       <div className="flex flex-col items-center justify-center min-h-[65vh] text-center">
@@ -21,14 +66,24 @@ export default function HomePage() {
           </span>
         </motion.p>
 
-        {/* Role / Title */}
+        {/* Role / Title with Rotating Typewriter */}
         <motion.h1
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15 }}
-          className="text-xl sm:text-2xl md:text-3xl font-medium tracking-normal mb-8 text-slate-500 dark:text-zinc-400 max-w-2xl leading-relaxed"
+          className="text-xl sm:text-2xl md:text-3xl font-medium tracking-normal mb-8 text-slate-600 dark:text-zinc-300 max-w-2xl leading-relaxed h-8 sm:h-9 md:h-10 flex items-center justify-center"
         >
-          {portfolioData.title}
+          <span className="sr-only">Software Engineer, AI Engineer, NLP Researcher</span>
+          <span aria-hidden="true" className="inline-flex items-center">
+            <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 dark:from-indigo-400 dark:via-violet-300 dark:to-purple-300 bg-clip-text text-transparent font-semibold">
+              {displayedText}
+            </span>
+            <motion.span
+              animate={{ opacity: [1, 0, 1] }}
+              transition={{ duration: 0.75, repeat: Infinity, ease: 'linear' }}
+              className="inline-block w-[2.5px] h-[1.15em] ml-1 bg-indigo-500 dark:bg-indigo-400 rounded-full align-middle"
+            />
+          </span>
         </motion.h1>
 
         {/* Avatar with profile image & aurora glow */}
