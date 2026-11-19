@@ -252,6 +252,10 @@ This project investigates the effectiveness of traditional ML models versus deep
       details: "CGPA: 3.84/4.00 | Graduated with Highest Distinction. Honors: Vice Chancellor's Honor List (6 times), Dean's Honor List (1 time).",
       image: '/bracu.png',
       logo: '/bracu.png',
+      links: {
+        website: 'https://www.bracu.ac.bd/',
+        facebook: 'https://www.facebook.com/BRACUniversity/',
+      },
     },
     {
       id: 'edu-2',
@@ -262,6 +266,9 @@ This project investigates the effectiveness of traditional ML models versus deep
       details: 'GPA 5.00/5.00',
       image: '/azizul.png',
       logo: '/azizul.png',
+      links: {
+        website: 'http://www.ahcollege.gov.bd/',
+      },
     },
     {
       id: 'edu-3',
@@ -272,6 +279,9 @@ This project investigates the effectiveness of traditional ML models versus deep
       details: 'PSC, JSC, SSC: GPA 5.00/5.00 across all 3 board examinations.',
       image: '/bcpsc.jpg',
       logo: '/bcpsc.jpg',
+      links: {
+        website: 'https://bcpsc.edu.bd/',
+      },
     },
   ],
 };

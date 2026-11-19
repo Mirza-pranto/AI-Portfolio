@@ -45,7 +45,8 @@ export const usePortfolioStore = create<PortfolioState>((set) => ({
   isLoading: false,
   setIsLoading: (loading) => set({ isLoading: loading }),
   isRenderingUi: false,
-  setIsRenderingUi: (val) => set({ isRenderingUi: val }),
+  setIsRenderingUi: (val) =>
+    set((state) => (state.isRenderingUi === val ? state : { isRenderingUi: val })),
   hasInteracted: false,
   setHasInteracted: (interacted) => set({ hasInteracted: interacted }),
   messages: [],

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, Globe, Sparkles, ArrowUpRight, FolderGit2, ArrowRight } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
@@ -47,95 +47,93 @@ export default function ExpandedDetailView() {
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
-  // Lookup item data from portfolioData
-  let item: any = null;
-  let matchingProjects: typeof portfolioData.projects = [];
+  // Memoize item and matchingProjects so references are completely stable across re-renders
+  const { item, matchingProjects } = useMemo(() => {
+    let computedItem: any = null;
+    let computedProjects: typeof portfolioData.projects = [];
 
-  if (expandedItemType === 'skill') {
-    const skillName = expandedItemId;
-    matchingProjects = portfolioData.projects.filter((p) =>
-      p.tags.some((tag) => isSkillMatchingTag(skillName || '', tag))
-    );
+    if (expandedItemType === 'skill') {
+      const skillName = expandedItemId;
+      computedProjects = portfolioData.projects.filter((p) =>
+        p.tags.some((tag) => isSkillMatchingTag(skillName || '', tag))
+      );
 
-    item = {
-      isSkillView: true,
-      skillName,
-      title: `Projects using ${skillName}`,
-      subtitle: 'Skill Deep Dive',
-      emoji: '⚡',
-      gradient: 'from-indigo-600 via-blue-600 to-cyan-600',
-    };
-  } else if (expandedItemType === 'project') {
-    item = portfolioData.projects.find((p) => String(p.id) === String(expandedItemId));
-  } else if (expandedItemType === 'fun') {
-    const sections = (portfolioData.fun as any).sections || [];
-    const section = sections.find((s: any) => String(s.id) === String(expandedItemId));
-    if (section) {
-      item = {
-        title: section.title,
-        subtitle: section.subtitle,
-        emoji: section.emoji,
-        image: section.image || null,
-        gradient: section.gradient || 'from-amber-600 to-orange-600',
-        tags: section.tags || [],
-        description: section.description,
-        longDescription: section.description,
-        links: null,
+      computedItem = {
+        isSkillView: true,
+        skillName,
+        title: `Projects using ${skillName}`,
+        subtitle: 'Skill Deep Dive',
+        emoji: '⚡',
+        gradient: 'from-indigo-600 via-blue-600 to-cyan-600',
       };
+    } else if (expandedItemType === 'project') {
+      computedItem = portfolioData.projects.find((p) => String(p.id) === String(expandedItemId)) || null;
+    } else if (expandedItemType === 'fun') {
+      const sections = (portfolioData.fun as any).sections || [];
+      const section = sections.find((s: any) => String(s.id) === String(expandedItemId));
+      if (section) {
+        computedItem = {
+          title: section.title,
+          subtitle: section.subtitle,
+          emoji: section.emoji,
+          image: section.image || null,
+          gradient: section.gradient || 'from-amber-600 to-orange-600',
+          tags: section.tags || [],
+          description: section.description,
+          longDescription: section.description,
+          links: null,
+        };
+      }
+    } else if (expandedItemType === 'education') {
+      const edu = portfolioData.education.find((e) => String(e.id) === String(expandedItemId));
+      if (edu) {
+        computedItem = {
+          title: edu.degree,
+          subtitle: `${edu.institution} • ${edu.location}`,
+          emoji: '🎓',
+          image: edu.image || null,
+          logo: edu.logo || null,
+          gradient: 'from-blue-600 via-indigo-600 to-violet-600',
+          tags: [edu.institution, edu.duration, edu.location],
+          description: edu.details,
+          longDescription: `**Institution:** ${edu.institution}  \n**Degree:** ${edu.degree}  \n**Duration:** ${edu.duration}  \n**Location:** ${edu.location}  \n\n### Academic Details & Honors\n${edu.details}`,
+          links: (edu as any).links || null,
+        };
+      }
+    } else if (expandedItemType === 'experience') {
+      const exp = portfolioData.experience.find((e) => String(e.id) === String(expandedItemId));
+      if (exp) {
+        computedItem = {
+          title: exp.role,
+          subtitle: `${exp.company} • ${exp.location}`,
+          emoji: '💼',
+          image: exp.image || null,
+          logo: exp.logo || null,
+          gradient: 'from-emerald-600 via-teal-600 to-cyan-600',
+          tags: [exp.company, exp.duration, exp.location],
+          description: exp.details,
+          longDescription: `**Organization:** ${exp.company}  \n**Role:** ${exp.role}  \n**Duration:** ${exp.duration}  \n**Location:** ${exp.location}  \n\n### Key Responsibilities & Impact\n${exp.details}`,
+          links: {
+            live: (exp as any).links?.website || 'https://linkedin.com/in/mirza-julkawsar-264752273',
+            facebook: (exp as any).links?.facebook,
+            instagram: (exp as any).links?.instagram,
+            website: (exp as any).links?.website,
+          },
+        };
+      }
     }
-  } else if (expandedItemType === 'education') {
-    const edu = portfolioData.education.find((e) => String(e.id) === String(expandedItemId));
-    if (edu) {
-      item = {
-        title: edu.degree,
-        subtitle: `${edu.institution} • ${edu.location}`,
-        emoji: '🎓',
-        image: edu.image || null,
-        logo: edu.logo || null,
-        gradient: 'from-blue-600 via-indigo-600 to-violet-600',
-        tags: [edu.institution, edu.duration, edu.location],
-        description: edu.details,
-        longDescription: `Institution: ${edu.institution}\nDegree: ${edu.degree}\nDuration: ${edu.duration}\nLocation: ${edu.location}\n\nAcademic Details & Honors:\n${edu.details}`,
-        links: null,
-      };
-    }
-  } else if (expandedItemType === 'experience') {
-    const exp = portfolioData.experience.find((e) => String(e.id) === String(expandedItemId));
-    if (exp) {
-      item = {
-        title: exp.role,
-        subtitle: `${exp.company} • ${exp.location}`,
-        emoji: '💼',
-        image: exp.image || null,
-        logo: exp.logo || null,
-        gradient: 'from-emerald-600 via-teal-600 to-cyan-600',
-        tags: [exp.company, exp.duration, exp.location],
-        description: exp.details,
-        longDescription: `Role: ${exp.role}\nOrganization: ${exp.company}\nDuration: ${exp.duration}\nLocation: ${exp.location}\n\nKey Responsibilities & Impact:\n${exp.details}`,
-        links: {
-          live: (exp as any).links?.website || 'https://linkedin.com/in/mirza-julkawsar-264752273',
-          facebook: (exp as any).links?.facebook,
-          instagram: (exp as any).links?.instagram,
-          website: (exp as any).links?.website,
-        },
-      };
-    }
-  }
+
+    return { item: computedItem, matchingProjects: computedProjects };
+  }, [expandedItemType, expandedItemId]);
 
   const fullDescription = item?.longDescription || item?.description || '';
 
   // Typewriter effect that triggers the screen edge light (isRenderingUi) and companion generating animation
   useEffect(() => {
-    if (!item) {
+    if (!item || !fullDescription) {
       setDisplayedText('');
       setIsTyping(false);
-      return;
-    }
-
-    const targetText = item.longDescription || item.description || '';
-    if (!targetText) {
-      setDisplayedText('');
-      setIsTyping(false);
+      setIsRenderingUi(false);
       return;
     }
 
@@ -147,17 +145,17 @@ export default function ExpandedDetailView() {
     // Calculate adaptive chunk size so it finishes in ~2.0 seconds with high-speed streaming
     const stepInterval = 20; // ms
     const totalSteps = 100;
-    const chunkSize = Math.max(3, Math.ceil(targetText.length / totalSteps));
+    const chunkSize = Math.max(3, Math.ceil(fullDescription.length / totalSteps));
 
     const timer = setInterval(() => {
       currentLength += chunkSize;
-      if (currentLength >= targetText.length) {
-        setDisplayedText(targetText);
+      if (currentLength >= fullDescription.length) {
+        setDisplayedText(fullDescription);
         setIsTyping(false);
         setIsRenderingUi(false);
         clearInterval(timer);
       } else {
-        setDisplayedText(targetText.slice(0, currentLength));
+        setDisplayedText(fullDescription.slice(0, currentLength));
       }
     }, stepInterval);
 
@@ -165,7 +163,7 @@ export default function ExpandedDetailView() {
       clearInterval(timer);
       setIsRenderingUi(false);
     };
-  }, [expandedItemId, expandedItemType, item, setIsRenderingUi]);
+  }, [expandedItemId, expandedItemType, fullDescription, setIsRenderingUi]);
 
   const handleSkipTyping = () => {
     if (isTyping && fullDescription) {
@@ -204,15 +202,29 @@ export default function ExpandedDetailView() {
           {/* Top cover image or gradient banner */}
           <div
             className={`relative w-full h-44 sm:h-56 rounded-3xl ${
-              item.image ? 'bg-zinc-900' : `bg-gradient-to-br ${item.gradient || 'from-indigo-600 to-purple-600'}`
+              item.image
+                ? expandedItemType === 'education'
+                  ? 'bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800'
+                  : 'bg-zinc-900'
+                : `bg-gradient-to-br ${item.gradient || 'from-indigo-600 to-purple-600'}`
             } flex items-center justify-center overflow-hidden shadow-md mb-8`}
           >
             {item.image ? (
-              <img
-                src={item.image}
-                alt={item.title}
-                className="w-full h-full object-cover"
-              />
+              expandedItemType === 'education' ? (
+                <div className="w-full h-full flex items-center justify-center p-6">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="max-h-36 max-w-xs object-contain filter drop-shadow-sm"
+                  />
+                </div>
+              ) : (
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-full object-cover"
+                />
+              )
             ) : (
               <>
                 {/* Subtle overlay texture */}

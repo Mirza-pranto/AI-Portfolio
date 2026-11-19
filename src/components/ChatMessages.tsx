@@ -31,7 +31,7 @@ export default function ChatMessages() {
   if (messages.length === 0) return null;
 
   return (
-    <div id="ai-chat-history" className="mt-10 space-y-6 w-full max-w-3xl">
+    <div id="ai-chat-history" className="mt-10 space-y-6 w-full">
       <AnimatePresence>
         {messages.map((message) => (
           <motion.div
@@ -51,7 +51,7 @@ export default function ChatMessages() {
               </div>
             ) : (
               /* AI Response: Pure seamless text directly on the canvas — NO box, NO border, exact site typography */
-              <div className="w-full text-slate-700 dark:text-zinc-300 text-base sm:text-lg leading-relaxed font-normal">
+              <div className="w-full max-w-3xl text-slate-700 dark:text-zinc-300 text-base sm:text-lg leading-relaxed font-normal">
                 {message.content ? (
                   <>
                     <div className="whitespace-pre-line space-y-3">

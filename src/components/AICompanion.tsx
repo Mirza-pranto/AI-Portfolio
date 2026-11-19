@@ -206,10 +206,13 @@ function AICompanion() {
       const skillName = expandedItemId;
       showMessage(skillName ? `Checking out projects powered by ${skillName}? Let's see the stack! ⚡` : getRandomFrom(SKILL_MESSAGES));
     } else if (expandedItemType === 'education') {
+      setSpinTrigger((s) => s + 1);
       showMessage(getRandomFrom(EDUCATION_MESSAGES));
     } else if (expandedItemType === 'experience') {
+      setSpinTrigger((s) => s + 1);
       showMessage(getRandomFrom(EXPERIENCE_MESSAGES));
     } else if (expandedItemType === 'fun') {
+      setSpinTrigger((s) => s + 1);
       showMessage(getRandomFrom(FUN_MESSAGES));
     } else if (expandedItemType === null) {
       if (timerRef.current) clearTimeout(timerRef.current);
