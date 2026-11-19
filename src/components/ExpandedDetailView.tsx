@@ -460,7 +460,7 @@ export default function ExpandedDetailView() {
                     <motion.span
                       animate={{ opacity: [1, 0] }}
                       transition={{ duration: 0.5, repeat: Infinity }}
-                      className="inline-block w-2 h-4 sm:h-5 bg-indigo-600 dark:bg-cyan-400 ml-1.5 align-middle rounded-xs"
+                      className="inline-block w-2 h-4 sm:h-5 bg-indigo-600 dark:bg-indigo-400 ml-1.5 align-middle rounded-xs"
                     />
                   )}
                 </div>

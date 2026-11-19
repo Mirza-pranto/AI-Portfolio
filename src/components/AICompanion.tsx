@@ -69,7 +69,7 @@ function ThinkingDots() {
       {[0, 1, 2].map((i) => (
         <motion.div
           key={i}
-          className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-cyan-400"
+          className="w-1.5 h-1.5 rounded-full bg-indigo-600 dark:bg-indigo-400"
           animate={{ y: [0, -5, 0], opacity: [0.4, 1, 0.4] }}
           transition={{
             duration: 0.6,
@@ -306,19 +306,19 @@ function AICompanion() {
               relative overflow-hidden
               backdrop-blur-xl
               bg-white/95 dark:bg-zinc-900/90
-              border-2 border-slate-300/90 dark:border-cyan-500/30
+              border-2 border-slate-300/90 dark:border-indigo-500/30
               rounded-2xl rounded-br-sm
-              shadow-xl shadow-slate-900/15 dark:shadow-cyan-950/40
+              shadow-xl shadow-slate-900/15 dark:shadow-indigo-950/30
               px-3.5 py-2.5
             ">
               {/* Subtle inner ambient tint */}
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-transparent to-blue-50/30 dark:from-cyan-950/30 dark:via-transparent dark:to-indigo-950/20 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-transparent to-blue-50/30 dark:from-indigo-950/30 dark:via-transparent dark:to-violet-950/20 pointer-events-none" />
 
               <div className="relative z-10 text-xs sm:text-[13px] leading-[1.6] font-semibold text-slate-800 dark:text-zinc-100">
                 {isGenerating && !companionMessage ? (
                   <div className="flex items-center gap-1.5 py-0.5">
                     <ThinkingDots />
-                    <span className="text-[11px] font-bold text-indigo-600 dark:text-cyan-400">
+                    <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400">
                       {isRenderingUi ? 'Synthesizing...' : 'Thinking...'}
                     </span>
                   </div>
@@ -436,10 +436,10 @@ function AICompanion() {
                   </linearGradient>
 
                   <linearGradient id="counterFluidDark" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#818cf8" stopOpacity="0.9" />
-                    <stop offset="50%" stopColor="#38bdf8" stopOpacity="0.75" />
-                    <stop offset="85%" stopColor="#c084fc" stopOpacity="0.4" />
-                    <stop offset="100%" stopColor="#818cf8" stopOpacity="0.1" />
+                    <stop offset="0%" stopColor="#7c3aed" stopOpacity="0.85" />
+                    <stop offset="45%" stopColor="#6366f1" stopOpacity="0.8" />
+                    <stop offset="80%" stopColor="#9333ea" stopOpacity="0.5" />
+                    <stop offset="100%" stopColor="#4f46e5" stopOpacity="0.15" />
                   </linearGradient>
                 </defs>
 
@@ -450,7 +450,7 @@ function AICompanion() {
                     stroke-[url(#counterFluidLight)] dark:stroke-[url(#counterFluidDark)]
                     stroke-[3.5]
                     drop-shadow-[0_0_8px_rgba(99,102,241,0.35)]
-                    dark:drop-shadow-[0_0_12px_rgba(129,140,248,0.6)]
+                    dark:drop-shadow-[0_0_10px_rgba(124,58,237,0.35)]
                   "
                   strokeLinecap="round"
                 />
@@ -464,7 +464,7 @@ function AICompanion() {
                     absolute w-2 h-2 rounded-full
                     bg-gradient-to-tr from-indigo-500 to-cyan-400 dark:bg-indigo-300
                     shadow-[0_0_6px_1.5px_rgba(99,102,241,0.5)]
-                    dark:shadow-[0_0_8px_2px_#818cf8]
+                    dark:shadow-[0_0_6px_1.5px_rgba(129,140,248,0.4)]
                   "
                   style={{
                     left: `calc(50% + ${48 * Math.cos((angle * Math.PI) / 180)}% - 4px)`,
@@ -490,11 +490,11 @@ function AICompanion() {
               rounded-full
               flex items-center justify-center
               overflow-hidden
-              border-2 border-indigo-400/90 dark:border-cyan-400/85
+              border-2 border-indigo-400/90 dark:border-indigo-500/50
               bg-gradient-to-b from-white/95 via-sky-50/80 to-indigo-100/90
-              dark:bg-gradient-to-b dark:from-slate-900/70 dark:via-blue-950/80 dark:to-cyan-950/90
+              dark:bg-gradient-to-b dark:from-zinc-900/90 dark:via-slate-950/95 dark:to-indigo-950/80
               shadow-[0_12px_28px_rgba(99,102,241,0.25),0_4px_12px_rgba(56,189,248,0.2),inset_0_-6px_16px_rgba(99,102,241,0.2),inset_0_3px_12px_rgba(255,255,255,0.95)]
-              dark:shadow-[0_0_26px_rgba(34,211,238,0.5),inset_0_-8px_20px_rgba(0,0,0,0.7),inset_0_3px_10px_rgba(34,211,238,0.6)]
+              dark:shadow-[0_0_28px_rgba(99,102,241,0.25),0_0_12px_rgba(139,92,246,0.2),inset_0_-8px_18px_rgba(15,10,30,0.8),inset_0_2px_8px_rgba(165,180,252,0.35)]
               backdrop-blur-xl
             ">
 
@@ -503,9 +503,9 @@ function AICompanion() {
                 className="
                   absolute w-9 h-9 sm:w-11 sm:h-11 rounded-full
                   bg-gradient-to-tr from-indigo-600 via-blue-500 to-cyan-300
-                  dark:from-cyan-400 dark:via-sky-400 dark:to-indigo-500
+                  dark:from-indigo-600 dark:via-violet-600 dark:to-indigo-400
                   shadow-[0_0_22px_rgba(79,70,229,0.7),0_0_10px_rgba(56,189,248,0.8)]
-                  dark:shadow-[0_0_26px_rgba(34,211,238,0.9)]
+                  dark:shadow-[0_0_22px_rgba(99,102,241,0.55),0_0_10px_rgba(168,85,247,0.4)]
                 "
                 animate={{
                   scale: isPageTransitioning
@@ -544,7 +544,7 @@ function AICompanion() {
                 absolute bottom-1 right-1.5
                 w-[48%] h-[24%]
                 rounded-full
-                bg-cyan-400/40 dark:bg-cyan-300/40
+                bg-cyan-400/40 dark:bg-indigo-400/25
                 blur-[4px]
                 pointer-events-none
               " />
@@ -574,10 +574,10 @@ function AICompanion() {
 
                   {/* Fluid Stream Gradient Dark Mode */}
                   <linearGradient id="fluidStreamDark" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.95" />
-                    <stop offset="45%" stopColor="#22d3ee" stopOpacity="1" />
-                    <stop offset="80%" stopColor="#818cf8" stopOpacity="0.9" />
-                    <stop offset="100%" stopColor="#c084fc" stopOpacity="0.85" />
+                    <stop offset="0%" stopColor="#6366f1" stopOpacity="0.9" />
+                    <stop offset="35%" stopColor="#8b5cf6" stopOpacity="0.95" />
+                    <stop offset="70%" stopColor="#a855f7" stopOpacity="0.85" />
+                    <stop offset="100%" stopColor="#6366f1" stopOpacity="0.75" />
                   </linearGradient>
 
                   {/* Liquid Glass Highlight Spine */}
@@ -595,7 +595,7 @@ function AICompanion() {
                     stroke-[url(#fluidStreamLight)] dark:stroke-[url(#fluidStreamDark)]
                     stroke-[5]
                     drop-shadow-[0_0_12px_rgba(99,102,241,0.45)]
-                    dark:drop-shadow-[0_0_16px_rgba(34,211,238,0.75)]
+                    dark:drop-shadow-[0_0_14px_rgba(129,140,248,0.45)]
                   "
                   strokeLinecap="round"
                 />
@@ -616,9 +616,9 @@ function AICompanion() {
                   className="
                     absolute w-3 h-3 rounded-full
                     bg-gradient-to-tr from-blue-700 via-cyan-400 to-white
-                    dark:from-cyan-300 dark:via-sky-200 dark:to-white
+                    dark:from-indigo-400 dark:via-violet-300 dark:to-white
                     shadow-[0_0_10px_2.5px_#2563eb]
-                    dark:shadow-[0_0_14px_3.5px_#22d3ee]
+                    dark:shadow-[0_0_10px_2px_rgba(139,92,246,0.55)]
                   "
                   style={{
                     left: `calc(50% + ${48 * Math.cos((angle * Math.PI) / 180)}% - 6px)`,
