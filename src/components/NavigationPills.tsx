@@ -24,6 +24,8 @@ export default function NavigationPills({ variant = 'wrap' }: NavigationPillsPro
     usePortfolioStore();
   const setIsRenderingUi = usePortfolioStore((s) => s.setIsRenderingUi);
   const glowTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const sliderRef = useRef<HTMLDivElement | null>(null);
+  const userInteractedRef = useRef(false);
 
   useEffect(() => {
     return () => {
@@ -34,7 +36,35 @@ export default function NavigationPills({ variant = 'wrap' }: NavigationPillsPro
     };
   }, []);
 
+  // Auto-peek / auto-rotate effect at the very beginning to demonstrate it is a slider
+  useEffect(() => {
+    if (variant !== 'slider') return;
+
+    // Small delay after mount so initial entrance settles
+    const timer1 = setTimeout(() => {
+      if (userInteractedRef.current || !sliderRef.current) return;
+      const el = sliderRef.current;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      if (maxScroll > 10) {
+        const peekDistance = Math.min(115, maxScroll);
+        el.scrollTo({ left: peekDistance, behavior: 'smooth' });
+      }
+    }, 1100);
+
+    // Pause so user sees the hidden pills, then smoothly return
+    const timer2 = setTimeout(() => {
+      if (userInteractedRef.current || !sliderRef.current) return;
+      sliderRef.current?.scrollTo({ left: 0, behavior: 'smooth' });
+    }, 2400);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, [variant]);
+
   const handleNavigate = (page: PageType) => {
+    userInteractedRef.current = true;
     if (page === activePage) return;
 
     if (glowTimerRef.current) {
@@ -56,7 +86,13 @@ export default function NavigationPills({ variant = 'wrap' }: NavigationPillsPro
   if (variant === 'slider') {
     return (
       <div className="relative w-full overflow-hidden">
-        <div className="flex items-center gap-1.5 overflow-x-auto scroll-smooth py-1 px-1 touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div
+          ref={sliderRef}
+          onTouchStart={() => { userInteractedRef.current = true; }}
+          onPointerDown={() => { userInteractedRef.current = true; }}
+          onWheel={() => { userInteractedRef.current = true; }}
+          className="flex items-center gap-1.5 overflow-x-auto scroll-smooth py-1 px-1 touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
           {navItems.map((item) => {
             const isActive = activePage === item.id;
             return (
