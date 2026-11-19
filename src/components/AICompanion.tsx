@@ -318,7 +318,7 @@ function AICompanion() {
   const showBubble = companionMessage !== null || isGenerating;
 
   return (
-    <div className="fixed bottom-4 right-4 sm:bottom-5 sm:right-5 z-50 flex flex-col items-end gap-2.5 pointer-events-none">
+    <div className="fixed bottom-36 right-3 sm:bottom-5 sm:right-5 z-50 flex flex-col items-end gap-2.5 pointer-events-none">
 
       {/* ══════════════ Speech Bubble (Compact, high-contrast glassmorphism) ══════════════ */}
       <AnimatePresence mode="wait">

@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePortfolioStore } from '@/lib/store';
 import LeftSidebar from '@/components/LeftSidebar';
 import NeuralGlow from '@/components/NeuralGlow';
@@ -29,24 +29,38 @@ const pageComponents = {
 export default function Page() {
   const activePage = usePortfolioStore((s) => s.activePage);
   const ActiveComponent = pageComponents[activePage];
-  const [sidebarWidth, setSidebarWidth] = useState(224);
+
+  // Desktop sidebar expanded state: 224 expanded, 64 collapsed
+  const [desktopSidebarWidth, setDesktopSidebarWidth] = useState(224);
+  // Track if we're on mobile (< 768px)
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  const sidebarOffset = isMobile ? 0 : desktopSidebarWidth;
 
   return (
-    <div className="min-h-screen bg-transparent text-zinc-900 dark:text-gray-100 transition-colors duration-300 flex">
+    <div className="min-h-screen bg-transparent text-zinc-900 dark:text-gray-100 transition-colors duration-300">
       {/* Neural Glow Effect */}
       <NeuralGlow />
 
-      {/* Left Sidebar Navigation */}
-      <LeftSidebar onToggle={(expanded) => setSidebarWidth(expanded ? 224 : 64)} />
+      {/* Left Sidebar / Mobile top-bar + drawer */}
+      <LeftSidebar onToggle={(expanded) => setDesktopSidebarWidth(expanded ? 224 : 64)} />
 
-      {/* Main area – offset by sidebar width */}
+      {/* Main area */}
       <motion.div
-        className="flex-1 flex flex-col min-h-screen"
-        animate={{ marginLeft: sidebarWidth }}
+        className="flex flex-col min-h-screen"
+        animate={{ marginLeft: sidebarOffset }}
         transition={{ type: 'spring', stiffness: 320, damping: 32 }}
       >
-        {/* Main scrollable content area */}
-        <main className="overflow-y-auto pb-44 flex-1">
+        {/* Main scrollable content — pt-14 on mobile for the fixed top bar */}
+        <main className="overflow-y-auto pb-44 flex-1 pt-14 md:pt-0">
           <AnimatePresence mode="wait">
             <motion.div
               key={activePage}
@@ -62,7 +76,7 @@ export default function Page() {
         </main>
 
         {/* Bottom Interface (Navigation Pills + Chat) */}
-        <BottomInterface sidebarWidth={sidebarWidth} />
+        <BottomInterface sidebarWidth={sidebarOffset} />
       </motion.div>
     </div>
   );
