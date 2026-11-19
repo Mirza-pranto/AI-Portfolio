@@ -55,9 +55,9 @@ export default function NavigationPills() {
       <div className="flex justify-center mb-2">
         <button
           onClick={toggleQuickQuestions}
-          className="text-xs text-zinc-500 hover:text-zinc-900 dark:text-gray-400 dark:hover:text-white transition-colors cursor-pointer"
+          className="text-xs font-semibold text-slate-600 hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400 transition-colors cursor-pointer tracking-wide"
         >
-          {showQuickQuestions ? 'Hide quick questions' : 'Show quick questions'}
+          {showQuickQuestions ? '↑ Hide quick questions' : '↓ Show quick questions'}
         </button>
       </div>
 
@@ -75,10 +75,10 @@ export default function NavigationPills() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => handleNavigate(item.id)}
-              className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 cursor-pointer ${
+              className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200 cursor-pointer border ${
                 activePage === item.id
-                  ? 'bg-black text-white dark:bg-white dark:text-black shadow-sm'
-                  : 'bg-white border border-gray-100 shadow-sm text-zinc-600 hover:text-zinc-900 dark:bg-zinc-800 dark:border-none dark:text-gray-400 dark:hover:text-white dark:hover:bg-zinc-700'
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-600/30'
+                  : 'bg-slate-100 hover:bg-indigo-50 border-slate-300 text-slate-700 hover:text-indigo-700 hover:border-indigo-300 shadow-xs dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-zinc-700 dark:hover:border-zinc-600'
               }`}
             >
               {item.icon}

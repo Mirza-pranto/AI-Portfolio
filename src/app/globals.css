@@ -4,13 +4,25 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #18181b;
+  --background: #eceff3;
+  --foreground: #0f172a;
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --gold: #d97706;
+  --surface: #ffffff;
+  --border: #cbd5e1;
+  --muted: #64748b;
 }
 
 .dark {
-  --background: #09090b;
-  --foreground: #fafafa;
+  --background: #09090d;
+  --foreground: #f8fafc;
+  --accent: #6366f1;
+  --accent-hover: #818cf8;
+  --gold: #f59e0b;
+  --surface: #111118;
+  --border: #27273a;
+  --muted: #94a3b8;
 }
 
 @theme inline {
@@ -24,7 +36,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 /* Custom scrollbar */
@@ -37,20 +49,20 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #e4e4e7;
-  border-radius: 3px;
+  background: #cbd5e1;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #d4d4d8;
+  background: #94a3b8;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #3f3f46;
+  background: #27273a;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #52525b;
+  background: #3b3b54;
 }
 
 /* Neural glow keyframes */
@@ -77,28 +89,29 @@ body {
   }
 }
 
+/* Premium aurora — deep indigo → violet → gold */
 .aurora-bg {
   background: linear-gradient(
     135deg,
-    #10b981,
-    #6366f1,
-    #8b5cf6,
-    #10b981,
-    #3b82f6
+    #4f46e5,
+    #7c3aed,
+    #db2777,
+    #d97706,
+    #4f46e5
   );
   background-size: 400% 400%;
-  animation: aurora-shift 8s ease infinite;
+  animation: aurora-shift 10s ease infinite;
 }
 
 /* Glassmorphism */
 .glass {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .dark .glass {
-  background: rgba(24, 24, 27, 0.8);
+  background: rgba(17, 17, 24, 0.92);
 }
 
 /* Hide scrollbar for horizontal scroll */
@@ -108,4 +121,12 @@ body {
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Premium gradient text utility */
+.gradient-text {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed, #d97706);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

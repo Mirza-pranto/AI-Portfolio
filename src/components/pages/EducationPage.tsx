@@ -91,7 +91,7 @@ export default function EducationPage() {
               } gap-6 md:gap-8 items-center md:items-start cursor-pointer group`}
             >
               {/* Image / Placeholder Column */}
-              <div className="w-full md:w-52 h-48 rounded-3xl overflow-hidden bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 flex items-center justify-center flex-shrink-0 relative shadow-xs group-hover:shadow-md group-hover:border-indigo-300 dark:group-hover:border-zinc-600 transition-all p-4">
+              <div className="w-full md:w-52 h-48 rounded-3xl overflow-hidden bg-white dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800 flex items-center justify-center flex-shrink-0 relative shadow-sm group-hover:shadow-md group-hover:border-indigo-300 dark:group-hover:border-zinc-600 transition-all p-4">
                 {edu.image ? (
                   <img
                     src={edu.image}

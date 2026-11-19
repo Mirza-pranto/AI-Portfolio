@@ -37,7 +37,7 @@ export default function Header() {
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 py-3.5 backdrop-blur-sm"
+      className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 py-3 bg-[#eceff3]/90 dark:bg-[#09090d]/90 backdrop-blur-md border-b-2 border-slate-300/80 dark:border-zinc-800 shadow-xs"
     >
       <motion.button
         whileHover={{ scale: 1.03 }}
@@ -45,7 +45,7 @@ export default function Header() {
         onClick={handleHomeClick}
         aria-label={`${portfolioData.name} — Go to Home`}
         title="Go to Home"
-        className="whitespace-nowrap text-left text-sm font-semibold tracking-wide text-zinc-900 dark:text-white sm:text-base"
+        className="whitespace-nowrap text-left text-sm font-bold tracking-wide text-slate-900 dark:text-zinc-100 sm:text-base cursor-pointer"
       >
         {portfolioData.name}
       </motion.button>
@@ -59,10 +59,10 @@ export default function Header() {
           onClick={handleHomeClick}
           aria-label="Go to Home"
           title="Go to Home"
-          className={`flex items-center justify-center w-9 h-9 rounded-full bg-white/70 dark:bg-zinc-800/70 backdrop-blur-md border shadow-sm transition-all cursor-pointer ${
+          className={`flex items-center justify-center w-9 h-9 rounded-full border-2 shadow-xs transition-all cursor-pointer ${
             activePage === 'home'
-              ? 'text-black dark:text-white border-zinc-400 dark:border-zinc-500 bg-white dark:bg-zinc-800'
-              : 'border-gray-200/80 dark:border-zinc-700/60 text-zinc-600 hover:text-black dark:text-zinc-400 dark:hover:text-white hover:border-gray-300 dark:hover:border-zinc-600'
+              ? 'bg-indigo-600 text-white border-indigo-600 shadow-indigo-500/30'
+              : 'bg-white dark:bg-zinc-850 border-slate-300 dark:border-zinc-700 text-slate-700 hover:text-indigo-600 hover:border-indigo-400 dark:text-zinc-300 dark:hover:text-indigo-400 dark:hover:border-zinc-600'
           }`}
         >
           <Home className="w-4 h-4" />
@@ -75,7 +75,7 @@ export default function Header() {
           download="Mirza_Julkawsar_Resume.pdf"
           aria-label="Download CV"
           title="Download CV"
-          className="flex h-9 items-center justify-center gap-1.5 rounded-full border border-gray-200/80 bg-white/70 px-3 text-sm font-medium text-zinc-700 shadow-sm backdrop-blur-md transition-colors hover:border-gray-300 dark:border-zinc-700/60 dark:bg-zinc-800/70 dark:text-zinc-200 dark:hover:border-zinc-600"
+          className="flex h-9 items-center justify-center gap-1.5 rounded-full border-2 border-slate-300 bg-white px-3.5 text-sm font-semibold text-slate-700 shadow-xs transition-all hover:border-indigo-400 hover:text-indigo-600 dark:border-zinc-700 dark:bg-zinc-850 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:text-indigo-400 cursor-pointer"
         >
           <Download className="h-4 w-4" />
           <span>CV</span>
@@ -89,7 +89,7 @@ export default function Header() {
             onClick={toggleTheme}
             aria-label="Toggle theme"
             title={resolvedTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            className="flex items-center justify-center w-9 h-9 rounded-full bg-white/70 dark:bg-zinc-800/70 backdrop-blur-md border border-gray-200/80 dark:border-zinc-700/60 text-zinc-700 dark:text-zinc-200 shadow-sm hover:border-gray-300 dark:hover:border-zinc-600 transition-colors cursor-pointer"
+            className="flex items-center justify-center w-9 h-9 rounded-full bg-white dark:bg-zinc-850 border-2 border-slate-300 dark:border-zinc-700 text-slate-700 dark:text-zinc-200 shadow-xs hover:border-amber-400 dark:hover:border-amber-500/60 transition-colors cursor-pointer"
           >
             {resolvedTheme === 'dark' ? (
               <Sun className="w-4 h-4 text-amber-400 transition-transform duration-200 rotate-0 hover:rotate-45" />

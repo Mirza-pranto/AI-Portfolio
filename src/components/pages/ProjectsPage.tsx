@@ -52,11 +52,11 @@ export default function ProjectsPage() {
           <motion.h2
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-4xl font-bold text-zinc-900 dark:text-white"
+            className="text-4xl font-bold text-slate-900 dark:text-zinc-50"
           >
             Projects
           </motion.h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+          <p className="text-sm text-slate-500 dark:text-zinc-400 mt-1">
             Click any project card to view architecture, metrics, and source links.
           </p>
         </div>
@@ -64,14 +64,14 @@ export default function ProjectsPage() {
           <button
             onClick={() => scroll('left')}
             aria-label="Previous project"
-            className="p-2.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-gray-300 transition-colors cursor-pointer"
+            className="p-2.5 rounded-full bg-slate-100 hover:bg-indigo-50 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-slate-600 hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400 border border-slate-200/80 dark:border-zinc-800 transition-colors cursor-pointer"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={() => scroll('right')}
             aria-label="Next project"
-            className="p-2.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-700 dark:text-gray-300 transition-colors cursor-pointer"
+            className="p-2.5 rounded-full bg-slate-100 hover:bg-indigo-50 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-slate-600 hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-400 border border-slate-200/80 dark:border-zinc-800 transition-colors cursor-pointer"
           >
             <ChevronRight className="w-5 h-5" />
           </button>

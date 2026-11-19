@@ -11,9 +11,12 @@ export default function HomePage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 dark:text-white mb-3"
+        className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-zinc-50 mb-3"
       >
-        Hey, I&apos;m {portfolioData.name}
+        Hey, I&apos;m{' '}
+        <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-500 dark:from-indigo-400 dark:via-violet-400 dark:to-purple-400 bg-clip-text text-transparent">
+          {portfolioData.name}
+        </span>
       </motion.p>
 
       {/* Role / Title */}
@@ -21,7 +24,7 @@ export default function HomePage() {
         initial={{ opacity: 0, y: 25 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.15 }}
-        className="text-xl sm:text-2xl md:text-3xl font-medium tracking-normal mb-8 text-zinc-600 dark:text-zinc-400 max-w-2xl leading-relaxed"
+        className="text-xl sm:text-2xl md:text-3xl font-medium tracking-normal mb-8 text-slate-500 dark:text-zinc-400 max-w-2xl leading-relaxed"
       >
         {portfolioData.title}
       </motion.h1>
@@ -34,18 +37,18 @@ export default function HomePage() {
         className="relative mb-8"
       >
         {/* Aurora glow behind avatar */}
-        <div className="absolute inset-0 -m-8 rounded-full aurora-bg opacity-35 dark:opacity-40 blur-3xl" />
+        <div className="absolute inset-0 -m-8 rounded-full aurora-bg opacity-30 dark:opacity-35 blur-3xl" />
         <motion.div
           animate={{
             boxShadow: [
-              '0 0 30px rgba(16,185,129,0.3)',
-              '0 0 60px rgba(139,92,246,0.4)',
-              '0 0 30px rgba(59,130,246,0.3)',
-              '0 0 60px rgba(16,185,129,0.3)',
+              '0 0 30px rgba(79,70,229,0.35)',
+              '0 0 60px rgba(124,58,237,0.45)',
+              '0 0 40px rgba(217,119,6,0.3)',
+              '0 0 60px rgba(79,70,229,0.35)',
             ],
           }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          className="relative w-36 h-36 md:w-48 md:h-48 rounded-full bg-gradient-to-br from-emerald-400 via-violet-500 to-blue-500 p-1 flex items-center justify-center overflow-hidden shadow-xl"
+          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+          className="relative w-36 h-36 md:w-48 md:h-48 rounded-full bg-gradient-to-br from-indigo-500 via-violet-500 to-amber-400 p-1 flex items-center justify-center overflow-hidden shadow-xl"
         >
           {portfolioData.avatar ? (
             <img
@@ -69,7 +72,7 @@ export default function HomePage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.5 }}
-        className="text-slate-600 dark:text-zinc-400 text-lg max-w-md font-normal leading-relaxed"
+        className="text-slate-500 dark:text-zinc-400 text-lg max-w-md font-normal leading-relaxed"
       >
         {portfolioData.tagline}
       </motion.p>

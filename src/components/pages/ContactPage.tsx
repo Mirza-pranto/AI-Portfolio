@@ -247,7 +247,7 @@ export default function ContactPage() {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           href={`mailto:${contact.email}`}
-          className="inline-flex items-center gap-2 bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-2xl px-8 py-3.5 text-sm font-semibold shadow-md transition-colors mb-4 cursor-pointer"
+          className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white dark:bg-indigo-500 dark:hover:bg-indigo-400 rounded-2xl px-8 py-3.5 text-sm font-semibold shadow-md shadow-indigo-200/50 dark:shadow-indigo-900/40 transition-colors mb-4 cursor-pointer"
         >
           <Mail className="w-4 h-4" />
           Send an Email ({contact.email})

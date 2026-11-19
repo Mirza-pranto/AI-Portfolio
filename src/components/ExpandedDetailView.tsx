@@ -144,7 +144,7 @@ export default function ExpandedDetailView() {
         transition={{ duration: 0.4, ease: 'easeOut' }}
         className="w-full max-w-4xl mx-auto px-4 sm:px-6 mt-12 mb-8"
       >
-        <div className="relative">
+        <div className="relative rounded-3xl bg-white dark:bg-zinc-900 border-2 border-slate-300 dark:border-zinc-800 p-5 sm:p-7 shadow-xl">
           {/* Top cover image or gradient banner */}
           <div
             className={`relative w-full h-44 sm:h-56 rounded-3xl ${
@@ -199,7 +199,7 @@ export default function ExpandedDetailView() {
                   {item.subtitle || (expandedItemType === 'project' ? 'Featured Project' : 'Activity')}
                 </span>
               </div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-zinc-800 dark:text-gray-300">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/60">
                 <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
                 {expandedItemType === 'project'
                   ? 'Project Details'
@@ -234,7 +234,7 @@ export default function ExpandedDetailView() {
                           whileHover={{ y: -3 }}
                           whileTap={{ scale: 0.98 }}
                           onClick={() => handleProjectSelect(proj.id)}
-                          className="group p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200/80 dark:border-zinc-800 hover:border-indigo-300 dark:hover:border-zinc-600 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
+                          className="group p-5 rounded-2xl bg-slate-50 dark:bg-zinc-850 border-2 border-slate-200 dark:border-zinc-800 hover:border-indigo-400 dark:hover:border-indigo-600 hover:shadow-md transition-all cursor-pointer flex flex-col justify-between"
                         >
                           <div>
                             <div className="flex items-center justify-between gap-2 mb-2">
@@ -295,7 +295,7 @@ export default function ExpandedDetailView() {
                     {item.tags.map((tag: string) => (
                       <span
                         key={tag}
-                        className="bg-zinc-900 text-white dark:bg-zinc-800 dark:text-zinc-200 px-3.5 py-1.5 rounded-full text-xs font-medium shadow-xs"
+                        className="bg-zinc-900 text-white dark:bg-indigo-600 dark:text-white px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm"
                       >
                         {tag}
                       </span>

@@ -27,7 +27,7 @@ export default function MePage() {
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="relative w-60 h-60 sm:w-64 sm:h-64 rounded-3xl overflow-hidden shadow-lg border border-gray-100 dark:border-zinc-800 bg-gradient-to-br from-emerald-100 via-teal-100 to-indigo-100 dark:from-zinc-900 dark:to-zinc-800 flex-shrink-0"
+          className="relative w-60 h-60 sm:w-64 sm:h-64 rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 dark:border-zinc-800 bg-gradient-to-br from-indigo-50 via-violet-50 to-amber-50 dark:from-zinc-900 dark:to-zinc-800 flex-shrink-0"
         >
           <img
             src={portfolioData.about.profileImage || '/profile.jpg'}
@@ -44,7 +44,7 @@ export default function MePage() {
           className="flex-1 flex flex-col justify-center text-center md:text-left"
         >
           {/* Name */}
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-zinc-900 dark:text-white mb-2">
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-slate-900 dark:text-zinc-50 mb-2">
             {portfolioData.name}
           </h1>
 
@@ -63,7 +63,7 @@ export default function MePage() {
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="bg-zinc-900 text-white dark:bg-zinc-800 dark:text-zinc-200 px-3.5 py-1.5 rounded-full text-xs font-medium shadow-xs"
+                className="bg-indigo-600 text-white dark:bg-indigo-700 dark:text-indigo-100 px-3.5 py-1.5 rounded-full text-xs font-semibold shadow-sm"
               >
                 {tag}
               </span>
