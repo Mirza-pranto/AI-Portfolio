@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, Globe, Sparkles, ArrowUpRight, FolderGit2, ArrowRight } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
@@ -40,10 +41,11 @@ function isSkillMatchingTag(skillName: string, tag: string): boolean {
 
 export default function ExpandedDetailView() {
   const { expandedItemType, expandedItemId, clearExpandedItem, setExpandedItem } = usePortfolioStore();
+  const setIsRenderingUi = usePortfolioStore((s) => s.setIsRenderingUi);
 
-  if (!expandedItemType || !expandedItemId) {
-    return null;
-  }
+  // Typewriter state for description streaming
+  const [displayedText, setDisplayedText] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
 
   // Lookup item data from portfolioData
   let item: any = null;
@@ -52,7 +54,7 @@ export default function ExpandedDetailView() {
   if (expandedItemType === 'skill') {
     const skillName = expandedItemId;
     matchingProjects = portfolioData.projects.filter((p) =>
-      p.tags.some((tag) => isSkillMatchingTag(skillName, tag))
+      p.tags.some((tag) => isSkillMatchingTag(skillName || '', tag))
     );
 
     item = {
@@ -120,6 +122,59 @@ export default function ExpandedDetailView() {
     }
   }
 
+  const fullDescription = item?.longDescription || item?.description || '';
+
+  // Typewriter effect that triggers the screen edge light (isRenderingUi) and companion generating animation
+  useEffect(() => {
+    if (!item) {
+      setDisplayedText('');
+      setIsTyping(false);
+      return;
+    }
+
+    const targetText = item.longDescription || item.description || '';
+    if (!targetText) {
+      setDisplayedText('');
+      setIsTyping(false);
+      return;
+    }
+
+    setDisplayedText('');
+    setIsTyping(true);
+    setIsRenderingUi(true);
+
+    let currentLength = 0;
+    // Calculate adaptive chunk size so it finishes in ~2.0 seconds with high-speed streaming
+    const stepInterval = 20; // ms
+    const totalSteps = 100;
+    const chunkSize = Math.max(3, Math.ceil(targetText.length / totalSteps));
+
+    const timer = setInterval(() => {
+      currentLength += chunkSize;
+      if (currentLength >= targetText.length) {
+        setDisplayedText(targetText);
+        setIsTyping(false);
+        setIsRenderingUi(false);
+        clearInterval(timer);
+      } else {
+        setDisplayedText(targetText.slice(0, currentLength));
+      }
+    }, stepInterval);
+
+    return () => {
+      clearInterval(timer);
+      setIsRenderingUi(false);
+    };
+  }, [expandedItemId, expandedItemType, item, setIsRenderingUi]);
+
+  const handleSkipTyping = () => {
+    if (isTyping && fullDescription) {
+      setDisplayedText(fullDescription);
+      setIsTyping(false);
+      setIsRenderingUi(false);
+    }
+  };
+
   if (!item) {
     return null;
   }
@@ -145,7 +200,7 @@ export default function ExpandedDetailView() {
         transition={{ duration: 0.4, ease: 'easeOut' }}
         className="w-full max-w-4xl mx-auto px-4 sm:px-6 mt-12 mb-8"
       >
-        <div className="relative rounded-3xl bg-white dark:bg-zinc-900 border-2 border-slate-300 dark:border-zinc-800 p-5 sm:p-7 shadow-xl">
+        <div className="relative">
           {/* Top cover image or gradient banner */}
           <div
             className={`relative w-full h-44 sm:h-56 rounded-3xl ${
@@ -288,7 +343,7 @@ export default function ExpandedDetailView() {
                 )}
               </div>
             ) : (
-              /* --- STANDARD EXPANDED VIEW: Render Tags & Markdown Description --- */
+              /* --- STANDARD EXPANDED VIEW: Render Tags & Markdown Description with Typewriter --- */
               <>
                 {/* Technology / Tag pills */}
                 {item.tags && item.tags.length > 0 && (
@@ -304,8 +359,12 @@ export default function ExpandedDetailView() {
                   </div>
                 )}
 
-                {/* Markdown Parsed Description using react-markdown with custom Tailwind components */}
-                <div className="text-slate-700 dark:text-zinc-300 leading-relaxed text-base sm:text-lg mb-8 max-w-3xl">
+                {/* Markdown Parsed Description with Live Streaming Typewriter Effect */}
+                <div
+                  onClick={handleSkipTyping}
+                  className="text-slate-700 dark:text-zinc-300 leading-relaxed text-base sm:text-lg mb-8 max-w-3xl cursor-default"
+                  title={isTyping ? "Click to reveal all immediately" : undefined}
+                >
                   <ReactMarkdown
                     components={{
                       h1: ({ children }) => (
@@ -381,8 +440,17 @@ export default function ExpandedDetailView() {
                       ),
                     }}
                   >
-                    {item.longDescription || item.description || ''}
+                    {displayedText}
                   </ReactMarkdown>
+
+                  {/* Blinking typing cursor indicator while generating */}
+                  {isTyping && (
+                    <motion.span
+                      animate={{ opacity: [1, 0] }}
+                      transition={{ duration: 0.5, repeat: Infinity }}
+                      className="inline-block w-2 h-4 sm:h-5 bg-indigo-600 dark:bg-cyan-400 ml-1.5 align-middle rounded-xs"
+                    />
+                  )}
                 </div>
               </>
             )}

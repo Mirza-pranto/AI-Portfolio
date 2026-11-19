@@ -96,7 +96,9 @@ function AICompanion() {
     setCompanionMessage,
   } = usePortfolioStore();
 
+  const isRenderingUi = usePortfolioStore((s) => s.isRenderingUi);
   const [isThinking, setIsThinking] = useState(false);
+  const isGenerating = isThinking || isRenderingUi;
   const [isPageTransitioning, setIsPageTransitioning] = useState(false);
   const [spinTrigger, setSpinTrigger] = useState(0);
   const clickCountRef = useRef(0);
@@ -280,7 +282,7 @@ function AICompanion() {
     };
   }, []);
 
-  const showBubble = companionMessage !== null || isThinking;
+  const showBubble = companionMessage !== null || isGenerating;
 
   return (
     <div className="fixed bottom-4 right-4 sm:bottom-5 sm:right-5 z-50 flex flex-col items-end gap-2.5 pointer-events-none">
@@ -289,7 +291,7 @@ function AICompanion() {
       <AnimatePresence mode="wait">
         {showBubble && (
           <motion.div
-            key={isThinking ? 'thinking' : companionMessage}
+            key={isGenerating ? (isRenderingUi ? 'generating' : 'thinking') : companionMessage}
             initial={{ opacity: 0, y: 12, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.92 }}
@@ -310,7 +312,16 @@ function AICompanion() {
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-transparent to-blue-50/30 dark:from-cyan-950/30 dark:via-transparent dark:to-indigo-950/20 pointer-events-none" />
 
               <div className="relative z-10 text-xs sm:text-[13px] leading-[1.6] font-semibold text-slate-800 dark:text-zinc-100">
-                {isThinking ? <ThinkingDots /> : companionMessage}
+                {isGenerating && !companionMessage ? (
+                  <div className="flex items-center gap-1.5 py-0.5">
+                    <ThinkingDots />
+                    <span className="text-[11px] font-bold text-indigo-600 dark:text-cyan-400">
+                      {isRenderingUi ? 'Synthesizing...' : 'Thinking...'}
+                    </span>
+                  </div>
+                ) : (
+                  companionMessage
+                )}
               </div>
             </div>
 
@@ -384,19 +395,19 @@ function AICompanion() {
                 rotate: [0, 360],
                 scale: isPageTransitioning
                   ? [1, 1.4, 1.1, 1.45, 1.15, 1.5, 1]
-                  : isThinking
+                  : isGenerating
                   ? [1, 1.3, 1]
                   : [1, 1.18, 1],
                 opacity: isPageTransitioning
                   ? [0.7, 1, 0.75, 1, 0.8, 1, 0.7]
-                  : isThinking
+                  : isGenerating
                   ? [0.65, 1, 0.65]
                   : [0.65, 0.92, 0.65],
               }}
               transition={{
-                rotate: { duration: isThinking ? 5 : 18, repeat: Infinity, ease: 'linear' },
-                scale: { duration: isPageTransitioning ? 1.4 : isThinking ? 0.5 : 2.4, repeat: isPageTransitioning ? 0 : Infinity, ease: 'easeInOut' },
-                opacity: { duration: isPageTransitioning ? 1.4 : isThinking ? 0.5 : 2.4, repeat: isPageTransitioning ? 0 : Infinity, ease: 'easeInOut' },
+                rotate: { duration: isGenerating ? 5 : 18, repeat: Infinity, ease: 'linear' },
+                scale: { duration: isPageTransitioning ? 1.4 : isGenerating ? 0.5 : 2.4, repeat: isPageTransitioning ? 0 : Infinity, ease: 'easeInOut' },
+                opacity: { duration: isPageTransitioning ? 1.4 : isGenerating ? 0.5 : 2.4, repeat: isPageTransitioning ? 0 : Infinity, ease: 'easeInOut' },
               }}
             />
 
@@ -404,10 +415,10 @@ function AICompanion() {
             <motion.div
               className="absolute inset-[-10px] sm:inset-[-13px] pointer-events-none z-0"
               animate={{
-                rotate: isThinking ? [360, 0] : [360, 0],
+                rotate: isGenerating ? [360, 0] : [360, 0],
               }}
               transition={{
-                duration: isThinking ? 3.5 : 14,
+                duration: isGenerating ? 3.5 : 14,
                 repeat: Infinity,
                 ease: 'linear',
               }}
@@ -457,11 +468,11 @@ function AICompanion() {
                     top: `calc(50% + ${48 * Math.sin((angle * Math.PI) / 180)}% - 4px)`,
                   }}
                   animate={{
-                    opacity: isPageTransitioning ? [0.6, 1, 0.6] : isThinking ? [0.6, 1, 0.6] : [0.6, 0.92, 0.6],
-                    scale: isPageTransitioning ? [0.85, 1.4, 0.85] : isThinking ? [0.85, 1.4, 0.85] : [0.85, 1.25, 0.85],
+                    opacity: isPageTransitioning ? [0.6, 1, 0.6] : isGenerating ? [0.7, 1, 0.7] : [0.6, 0.92, 0.6],
+                    scale: isPageTransitioning ? [0.85, 1.4, 0.85] : isGenerating ? [0.9, 1.4, 0.9] : [0.85, 1.25, 0.85],
                   }}
                   transition={{
-                    duration: isPageTransitioning ? 1.4 : isThinking ? 0.5 : 2.4,
+                    duration: isPageTransitioning ? 1.4 : isGenerating ? 0.5 : 2.4,
                     repeat: isPageTransitioning ? 0 : Infinity,
                     ease: 'easeInOut',
                   }}
@@ -496,17 +507,17 @@ function AICompanion() {
                 animate={{
                   scale: isPageTransitioning
                     ? [1, 1.4, 0.88, 1.45, 0.9, 1.5, 0.92, 1.4, 1]
-                    : isThinking
+                    : isGenerating
                     ? [0.95, 1.25, 0.95]
                     : [0.96, 1.08, 0.96],
                   opacity: isPageTransitioning
                     ? [0.75, 1, 0.75, 1, 0.8, 1, 0.85, 1, 0.75]
-                    : isThinking
+                    : isGenerating
                     ? [0.85, 1, 0.85]
                     : [0.75, 0.92, 0.75],
                 }}
                 transition={{
-                  duration: isPageTransitioning ? 1.4 : isThinking ? 0.5 : 2.4,
+                  duration: isPageTransitioning ? 1.4 : isGenerating ? 0.5 : 2.4,
                   repeat: isPageTransitioning ? 0 : Infinity,
                   ease: 'easeInOut',
                 }}
@@ -540,10 +551,10 @@ function AICompanion() {
             <motion.div
               className="absolute inset-[-13px] sm:inset-[-16px] pointer-events-none z-20"
               animate={{
-                rotate: isThinking ? [0, 360] : [0, 360],
+                rotate: isGenerating ? [0, 360] : [0, 360],
               }}
               transition={{
-                duration: isThinking ? 2.4 : 10,
+                duration: isGenerating ? 2.4 : 10,
                 repeat: Infinity,
                 ease: 'linear',
               }}
@@ -613,17 +624,17 @@ function AICompanion() {
                   animate={{
                     scale: isPageTransitioning
                       ? [0.85, 1.4, 0.85]
-                      : isThinking
+                      : isGenerating
                       ? [0.85, 1.4, 0.85]
                       : [0.85, 1.25, 0.85],
                     opacity: isPageTransitioning
                       ? [0.65, 1, 0.65]
-                      : isThinking
+                      : isGenerating
                       ? [0.65, 1, 0.65]
                       : [0.65, 0.92, 0.65],
                   }}
                   transition={{
-                    duration: isPageTransitioning ? 1.4 : isThinking ? 0.5 : 2.4,
+                    duration: isPageTransitioning ? 1.4 : isGenerating ? 0.5 : 2.4,
                     repeat: isPageTransitioning ? 0 : Infinity,
                     ease: 'easeInOut',
                   }}
