@@ -78,6 +78,30 @@ export default function ChatInput() {
       content: '',
     });
 
+    // If sent from the home page, immediately load the 'me' page to showcase the bio & response
+    const currentStore = usePortfolioStore.getState();
+    const isFromHome = currentStore.activePage === 'home';
+    if (isFromHome) {
+      currentStore.setActivePage('me');
+      currentStore.setIsRenderingUi(true);
+      setTimeout(() => {
+        usePortfolioStore.getState().setIsRenderingUi(false);
+      }, 1200);
+    }
+
+    // Smooth scroll down to reveal the streaming chat response
+    setTimeout(() => {
+      const chatEl = document.getElementById('ai-chat-history');
+      if (chatEl) {
+        chatEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: 'smooth',
+        });
+      }
+    }, isFromHome ? 350 : 100);
+
     setIsLoading(true);
 
     try {

@@ -12,7 +12,7 @@ export default function ChatMessages() {
   if (messages.length === 0) return null;
 
   return (
-    <div className="mt-8 space-y-4">
+    <div id="ai-chat-history" className="mt-8 space-y-4">
       <div className="border-t border-slate-200/60 dark:border-zinc-800/80 pt-6">
         <h3 className="text-xs font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest mb-4 flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
